@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+<!-- Hibernate session factory -->
+<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+
+
+    <property name="dataSource">
+      <ref bean="dataSource"/>
+    </property>
+
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">false</prop>
+         <prop key="hibernate.hbm2ddl.auto">update</prop>
+       </props>
+    </property>
+
+    <property name="annotatedClasses">
+	<list>
+		<value>com.pikare.model.Task</value>
+		<value>com.pikare.model.Users</value>
+		<value>com.pikare.model.UserRole</value>
+		<value>com.pikare.model.Kategori</value>
+		<value>com.pikare.model.Efor</value>
+		
+	</list>
+    </property>
+
+    </bean>
+</beans>

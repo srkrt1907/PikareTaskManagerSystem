@@ -1,0 +1,5 @@
+<zk>
+	<div apply="com.pikare.zk.charts.HtmlLabelComposer">
+		<charts id="chart" type="bar" title="HTML label" />
+	</div>
+</zk>

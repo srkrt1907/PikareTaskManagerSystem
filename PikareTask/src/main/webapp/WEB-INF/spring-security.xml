@@ -1,0 +1,30 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/jdbc
+           http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-4.0.xsd
+           http://www.springframework.org/schema/context 
+           http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/secure/**" access="isAuthenticated()" />
+		
+		<!-- access denied page -->
+		<access-denied-handler error-page="/403" />
+		<form-login login-page="/login"  default-target-url="/secure/task" authentication-failure-url="/login?error"
+			username-parameter="username" password-parameter="password" />
+		<logout logout-success-url="/login?logout" />
+		<!-- enable csrf protection -->
+		<csrf />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="loginService" />
+	</authentication-manager>
+
+</beans:beans>
