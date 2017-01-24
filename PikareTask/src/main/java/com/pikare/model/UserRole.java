@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+
 @Entity
 @Table(name = "user_roles")
 public class UserRole {
@@ -20,7 +22,7 @@ public class UserRole {
 	@Column(name = "user_role_id", unique = true, nullable = false)
 	private Integer userRoleId;
 
-	@ManyToOne(fetch = FetchType.LAZY,cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "username",referencedColumnName = "username", nullable = false)
 	private Users user;
 

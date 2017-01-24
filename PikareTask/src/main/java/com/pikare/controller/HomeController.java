@@ -1,10 +1,10 @@
 package com.pikare.controller;
 
 import java.lang.annotation.Annotation;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +14,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpRequest;
@@ -73,6 +77,9 @@ public class HomeController {
 	@Autowired
 	EforDao eforDao;
 	
+	private static final Logger logger = Logger.getLogger(HomeController.class); 
+	
+	
 	public TaskDao getTaskDao() {
 		return taskDao;
 	}
@@ -83,6 +90,7 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	ModelAndView giris()
 	{
+		logger.info(" project started");
 		return new ModelAndView("/login/login");
 	}
 	
@@ -172,6 +180,8 @@ public class HomeController {
 	{
 		ModelAndView model = new ModelAndView("registerNewUser");
 	
+		
+		
 		for(int i = 0; i<user.getRoles().size();i++)
 			user.getUserRole().add(new UserRole(user,user.getRoles().get(i)));
 		
@@ -258,7 +268,7 @@ public class HomeController {
 		model2.addObject("weekList", taskDao.getWeek());
 		model2.addObject("week", week);
 		model2.addObject("taskSahibi", user);
-		model2.addObject("kategori", kategori);
+		model2.addObject("anakategori", kategori);
 		model2.addObject("status", status);
 		
 		List<Users> users = userDao.getByUserRoles();
@@ -289,6 +299,11 @@ public class HomeController {
 	@RequestMapping(value = "/secure/taskupdate", method = RequestMethod.GET)
 	ModelAndView taskupdate(@RequestParam(value = "taskid") String taskNo)
 	{
+		if(pikareSession.getUsername().isEmpty())
+		{
+			setSession();
+		}
+		
 		ModelAndView model = new ModelAndView("taskEkle");
 		
 		List<Users> users = userDao.getByUserRoles();
@@ -301,6 +316,11 @@ public class HomeController {
 		model.addObject("eforList", efor);
 		
 		Task task = taskDao.getTaskById(taskNo);
+		if(pikareSession.getRole().equals("ROLE_USER"))
+		{
+			task.setCloseWeek(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		}
+		
 		model.addObject("task", task);
 		model.addObject("saveorupdate", "update");
 	
@@ -333,6 +353,9 @@ public class HomeController {
 			{
 				if(!task.getTaskSahibi().isEmpty() && pikareSession.getName().toUpperCase().equals(task.getTaskSahibi()) || !pikareSession.getRole().equals("ROLE_USER"))
 				{
+					if(pikareSession.getRole().equals("ROLE_ADMIN"))
+						task.setCloseWeek(null);
+					
 					taskDao.updateTask(task);
 					model.addObject("msg", "Guncelleme Başarili bir şekilde güncellendi.");
 				}
@@ -441,14 +464,13 @@ public class HomeController {
 			}
 		}
 		
-		@InitBinder
-
-		protected void initBinder(WebDataBinder binder) {
-
-		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		    binder.registerCustomEditor(Date.class,"closeWeek", new CustomDateEditor(dateFormat,false));
-
-		}
+//		@InitBinder
+//		protected void initBinder(WebDataBinder binder) {
+//
+//		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		    binder.registerCustomEditor(Date.class,"closeWeek", new CustomDateEditor(dateFormat,false));
+//
+//		}
 		
 }
 

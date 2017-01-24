@@ -1,5 +1,6 @@
 package com.pikare.dao;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class EforDaoImp implements EforDao {
 
 	@Override
 	public List<Efor> get() {
-		List<Efor> efor = new ArrayList<>();
+		List<Efor> efor = new ArrayList<Efor>();
 		Session session = null;
 		Transaction txn = null;
 		try {  

@@ -1,7 +1,9 @@
 package com.pikare.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="Task")
@@ -39,6 +42,15 @@ public class Task {
 	String yonetici;
 	String priority;
 	
+	@Transient
+	String efor;
+	
+	public String getEfor() {
+		return efor;
+	}
+	public void setEfor(String efor) {
+		this.efor = efor;
+	}
 	public String getPriority() {
 		return priority;
 	}

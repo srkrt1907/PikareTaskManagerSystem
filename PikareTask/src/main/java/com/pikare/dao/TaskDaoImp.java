@@ -89,7 +89,7 @@ public class TaskDaoImp implements TaskDao {
 	@Override
 	public List<Task> listTasks() {
 		
-		List<Task> task = new ArrayList<>();
+		List<Task> task = new ArrayList<Task>();
 		Session session = null;
 		Transaction txn = null;
 		try {  
@@ -145,7 +145,7 @@ public class TaskDaoImp implements TaskDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Task> getTaskByUser(String user) {
-		List<Task> task = new ArrayList<>();
+		List<Task> task = new ArrayList<Task>();
 		Session session = null;
 		Transaction txn = null;
 		try {  
@@ -202,13 +202,13 @@ public class TaskDaoImp implements TaskDao {
 		        Object[] sonuc = (Object[]) kittensAndMothers.next();
 		        FilterClass temp= new FilterClass();
 		        Long sayi = (Long) sonuc[0];
-		        int hafta = (int) sonuc[1];
-		        int yil = (int) sonuc[2];
+		       // int hafta = (int) sonuc[1];
+		       // int yil = (int) sonuc[2];
 		        String ad = (String)sonuc[3];
 		        
-		        String closeWeek = Integer.toString(yil) +"-"+Integer.toString(hafta);
+		       // String closeWeek = Integer.toString(yil) +"-"+Integer.toString(hafta);
  		        temp.setCount(new BigDecimal(sayi).intValueExact());
-		        temp.setCloseWeek(closeWeek);
+		        temp.setCloseWeek("");
 		        temp.setUser(ad);
 		        
 		        list.add(temp);
@@ -230,13 +230,13 @@ public class TaskDaoImp implements TaskDao {
 		        Object[] sonuc = (Object[]) kittensAndMothers.next();
 		        FilterClass temp= new FilterClass();
 		        Long sayi = (Long) sonuc[0];
-		        int hafta = (int) sonuc[1];
-		        int yil = (int) sonuc[2];
+		       // int hafta = (int) sonuc[1];
+		       // int yil = (int) sonuc[2];
 		        String ad = (String)sonuc[3];
 		        
-		        String closeWeek = Integer.toString(yil) +"-"+Integer.toString(hafta);
+		        //String closeWeek = Integer.toString(yil) +"-"+Integer.toString(hafta);
  		        temp.setCount(new BigDecimal(sayi).intValueExact());
-		        temp.setCloseWeek(closeWeek);
+		        temp.setCloseWeek("");
 		        temp.setUser(ad);
 		        
 		        
@@ -262,7 +262,7 @@ public class TaskDaoImp implements TaskDao {
 
 	@Override
 	public List<String> getWeek() {
-		List<String> week = new ArrayList<>();
+		List<String> week = new ArrayList<String>();
 		List result = null;
 		Session session = null;
 		Transaction txn = null;
@@ -275,8 +275,11 @@ public class TaskDaoImp implements TaskDao {
 		    for(int i = 0 ; i< result.size() ; i++)
 		    {
 		    	Object[] o = (Object[])result.get(i);
-		    	int tarih = (int)o[0];
-		    	int hafta = (int)o[1];
+		    	//int tarih = (int)o[0];
+		    	//int hafta = (int)o[1];
+		    	int tarih= Integer.parseInt(o[0].toString());
+		    	int hafta= Integer.parseInt(o[1].toString());
+		    	
 		    	week.add(Integer.toString(tarih) + "-" + Integer.toString(hafta));
 		    }
 		    txn.commit();
@@ -299,7 +302,7 @@ public class TaskDaoImp implements TaskDao {
 	@Override
 	public List<Task> getByWeek(int hafta, int yil, String user,
 			String kategori,String anakategori,String status) {
-		List<Task> task = new ArrayList<>();
+		List<Task> task = new ArrayList<Task>();
 		Session session = null;
 		Transaction txn = null;
 		try {  

@@ -51,7 +51,7 @@ public class KategoriDaoImp implements KategoriDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Kategori> get() {
-		List<Kategori> kategori = new ArrayList<>();
+		List<Kategori> kategori = new ArrayList<Kategori>();
 		Session session = null;
 		Transaction txn = null;
 		try {  
@@ -116,14 +116,17 @@ public class KategoriDaoImp implements KategoriDao {
 		try {  
 		    session = sessionFactory.openSession();  
 		    txn = session.beginTransaction();
-		    Query query = session.createQuery("SELECT DISTINCT eforHarf from Kategori order by eforHarf"); //You will get Weayher object
+		    Query query = session.createQuery("SELECT DISTINCT eforHarf,efordeger from Kategori order by eforHarf"); //You will get Weayher object
 		    list = query.list();
 		    txn.commit();
-		    System.out.println("başarli bir �ekilde eklendi");
+		    System.out.println("başarli bir şekilde eklendi");
 		    
 		    for(int i = 0 ; i< list.size() ; i++)
 		    {
-		    	eforharf.add((String) list.get(i));
+		    	Object[] object = (Object[])list.get(i);
+		    	eforharf.add((String)object[0]);
+		    	int dgr= Integer.parseInt(object[1].toString());
+		    	eforharf.add(Integer.toString(dgr));
 		    }
 
 		} catch (Exception e) { 

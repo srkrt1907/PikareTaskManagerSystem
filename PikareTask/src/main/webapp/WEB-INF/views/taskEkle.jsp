@@ -18,9 +18,6 @@
 <sec:authorize access="hasRole('USER')" var="isUser" />
 <sec:authorize access="hasRole('ADMIN')" var="isAdmin" />
 <sec:authorize access="hasRole('PO')" var="isPo" />
-
-
-
 <br>
 <!-- Form Name -->
 
@@ -71,7 +68,7 @@
   <form:select class="form-control input-sm" path="isTanimi" disabled="${!isUser}" itemValue="isTanimi" name="isTanimi" id="isTanimi">
    <form:option value="" />
    
-   <c:forEach items="${eforList }" var="efor">
+   <c:forEach items="${eforList }" var="efor" step="2"  >
    		<form:option value="${efor}"></form:option>
    	</c:forEach>
 	
@@ -156,7 +153,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Kategori</label>  
   <div class="col-md-4">
-  <form:select class="form-control input-sm" id="country" itemValue="kategori" path="kategori"> 
+  <form:select class="form-control input-sm"  disabled="${!isPo}" itemValue="kategori" name="kategori2" id="kategori2" path="kategori"> 
    <c:forEach items="${kategori }" var="kat">
    		<form:option value="${kat.kategori}"></form:option>
    	</c:forEach>

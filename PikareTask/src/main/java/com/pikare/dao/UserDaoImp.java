@@ -65,6 +65,10 @@ public class UserDaoImp implements UserDao {
 		try {  
 		    session = sessionFactory.openSession();  
 		    txn = session.beginTransaction();
+		    Query query = session.createQuery(" delete from UserRole where username ='"+user.getUsername()+"'" );
+		    query.executeUpdate();
+		    txn.commit();
+		    txn = session.beginTransaction();	    
 		    session.update(user); 
 		    txn.commit();
 		    System.out.println("başarli bir şekilde eklendi");

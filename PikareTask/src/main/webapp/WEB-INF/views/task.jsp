@@ -28,7 +28,7 @@
                                     <tr>
                                         <th style="width: 5%">Task No</th>
                                         <th>Task Adi</th>
-                                        <th>Task Kimin</th>
+                                        <th>Task Assigment</th>
                                         <th style="width: 5%">Aciliyet</th>
                                         <th>Kategori</th>
                                         <th style="width: 7%">İş Tanımı</th>
@@ -75,7 +75,13 @@
 <script>
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
-        responsive: true
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'pdfHtml5'
+        ]
     });
 });
 </script>

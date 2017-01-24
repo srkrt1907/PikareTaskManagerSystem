@@ -5,13 +5,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
 <title>Insert title here</title>
 </head>
 <body>
 	 <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">İstatislik</h1>
+                    <h1 class="page-header">Raporlama</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -20,20 +21,18 @@
 <%--             			<jsp:include page="basicLine.zul"></jsp:include> --%>
                    		<form method="GET" action="home2" >
                    		
-                   		<label class="col col-lg-1"  for="name">Hafta</label> 
-                   		<div class = "col-md-2">
+                   		<label style="float:left"   for="name">Hafta</label> 
+                   		<div style="float:left" class = "col-md-2">
 						  <select class="form-control input-sm" id="taskWeek" name="taskWeek">						  
 						    <option value="" label="--Please Select"/>
 							<c:forEach items="${weekList}" var="week">
 								<option value="${week}">${week}</option>
 							</c:forEach>
-							</select>
-                   		
- 
+							</select>                 		
 						  </div>
 
-                   		<label class="col col-lg-1"  for="name">Task Assigment</label>  
-						  <div class = "col-md-2">
+                   		<label style="float:left" for="name">Task Assigment</label>  
+						  <div style="float:left" class = "col-md-2">
 						  <select class="form-control input-sm" id="taskSahibi" name="taskSahibi">
 						  
 						   <option value="" label="--Please Select"/>
@@ -44,18 +43,18 @@
                    			</div>
  								
 
-							<label class="col col-lg-1" for="name"> Kategori</label>  
-							  <div class="col-md-2">
+							<label style="float:left"  for="name"> Kategori</label>  
+							  <div style="float:left" class="col-md-2">
 							 <select class="form-control input-sm" id="anakategori"   name="anakategori"> 
 							 	   <option value="" label="--Please Select"/>
 							 <c:forEach items="${anakategori }" var="kat">
 							   		<option value="${kat}" label="${kat}"></option>
 							 </c:forEach>
-							</select>
+ 							</select>
 						  </div>
 						  
-						  <label class="col-md-1 control-label" for="name"> Status</label>  
-							  <div class="col-md-2">
+						  <label style="float:left" for="name"> Status</label>  
+							  <div style="float:left" class="col-md-2">
 							 <select class="form-control input-sm" id="status"   name="status"> 
 							 	   <option value="" label="--Please Select"/>
 									<option value="WAITING" label="WAITING">
@@ -64,7 +63,7 @@
 							</select>
 						  </div>
 							
-												
+									<input class="btn" type="submit" value="Listele">			
 <!--                    		 <label class="col-md-1 control-label" for="name">Kategori</label>   -->
 <!-- 							  <div class="col-md-2"> -->
 							  <input type="hidden" name="kategori" value=""/>
@@ -76,7 +75,7 @@
 <!-- 							</select> -->
 <!-- 						  </div> -->
 							
-							<input class="btn" type="submit" value="Listele">
+							
        
                         </form>
 							
@@ -90,18 +89,20 @@
                     	
 <%--                     	<jsp:include page="basicLine.zul"></jsp:include> --%>
 
-      				 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+      				 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">Task No</th>
                                         <th>Task Adi</th>
-                                        <th>Task Kimin</th>
+                                        <th>Task Assigment</th>
                                         <th style="width: 5%">Aciliyet</th>
                                         <th style="width: 7%">İş Tanımı</th>
                                         <th style="width: 7%">Status</th>
                                         <th>Kategori</th>
                                         <th >Açılış Tar.</th>
                                         <th>Kapanış Tar.</th>
+                                        <th style="display: none">Talep Sahibi</th>
+                                        <th style="display: none">Talep Yöneticisi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,7 +116,9 @@
                                         <td >${task.status}</td>
                                         <td >${task.kategori}</td>
                                         <td >${task.openWeek}</td>
-                                        <td >${task.closeWeek}</td>    
+                                        <td >${task.closeWeek}</td>
+                                        <td style="display: none" >${task.talepSahibi}</td>  
+                                        <td style="display: none">${task.yonetici}</td>      
                                     </tr>     
    						
 								</c:forEach>
@@ -124,9 +127,12 @@
                             </table>
                             
       					</div>
+      					
+      					
     				</div>
                     <!-- /.panel -->
-                  
+<!--                     <iframe id="txtArea1" style="display:none"></iframe> -->
+<!--                   <input class="btn" type="button" onclick="fnExcelReport()" value="Excel Ciktisi Al"> -->
             <!-- /.row -->
 </body>
 
@@ -155,13 +161,18 @@
 // 			var paramOne =<c:out value="${kategori}"/>
 // 			var paramtwo =<c:out value="${taskSahibi}"/>
 // 			var paramthree =<c:out value="${week}"/>
-
-			
+		
 			
 // 			document.getElementById('kategori').value =paramOne;
 			
-		    $('#dataTables-example').DataTable({
-		        responsive: true
+		    $('#dataTables').DataTable({
+		        responsive: true,
+		        dom: 'Bfrtip',
+		        buttons: [
+		            'copyHtml5',
+		            'excelHtml5',
+		            'pdfHtml5'
+		        ]
 		    });
 
   }); 

@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 
 
 
+
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -54,8 +56,9 @@ public class Users implements Serializable {
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = { CascadeType.ALL }, orphanRemoval = true)
-	@Fetch (FetchMode.SELECT) 
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user",orphanRemoval = true)
+	@Cascade(value={org.hibernate.annotations.CascadeType.ALL})
 	private List<UserRole> userRole = new ArrayList<UserRole>();
 	
 	@Transient

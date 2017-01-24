@@ -31,13 +31,15 @@
 
     <!-- DataTables Responsive CSS -->
     <link href="../resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet">
+    
     <!-- Custom Fonts -->
     <link href="../resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" type="text/css">
-  
-
+	
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">  
     <!-- Custom CSS -->
     <link href="../resoruces/dist/css/sb-admin-2.css" rel="stylesheet">
 
@@ -117,7 +119,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="home"><i class="fa fa-dashboard fa-fw"></i> İstatislik</a>
+                            <a href="home"><i class="fa fa-dashboard fa-fw"></i> Raporlama</a>
                         </li>
                         <li>
                             <a href="task"><i class="fa fa-table fa-fw"></i> All Task</a>
@@ -172,11 +174,24 @@
     <script src="../resources/vendor/datatables-responsive/dataTables.responsive.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js"></script>
     <script src="../resources/assets/js/task.js"></script>
+    
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+    
    	
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.min.js"></script>
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-   	
+	
+	
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>	
+	
+	
 	<dec:getProperty property="page.local_script"></dec:getProperty>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
 

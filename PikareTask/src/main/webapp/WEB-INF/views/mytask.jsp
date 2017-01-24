@@ -29,7 +29,7 @@
                                         <th style="width: 15%">Task No</th>
                                         <th>Task Adi</th>
                                         <th style="width: 15%">Status</th>
-                                        <th style="width: 15%">Açılış Haf.</th>
+                                        <th style="width: 15%">Açılış Tar.</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,8 +71,8 @@
                                         <th>Task Adi</th>
                                         <th style="width: 10%">İş Tanımı</th>
                                         <th style="width: 10%">Status</th>
-                                        <th style="width: 10%">Açılış Haf.</th>
-                                        <th style="width: 10%">Kapanış Haf.</th>
+                                        <th style="width: 10%">Açılış Tar.</th>
+                                        <th style="width: 10%">Kapanış Tar.</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -106,10 +106,22 @@
 <script>
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
-        responsive: true
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'pdfHtml5'
+        ]
     });
     $('#dataTables-example2').DataTable({
-        responsive: true
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'pdfHtml5'
+        ]
     });
 
    
