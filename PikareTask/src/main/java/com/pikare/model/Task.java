@@ -41,7 +41,15 @@ public class Task {
 	String talepSahibi;
 	String yonetici;
 	String priority;
+	Date assigmnetDate;
 	
+	public Date getAssigmnetDate() {
+		return assigmnetDate;
+	}
+	public void setAssigmnetDate(Date assigmnetDate) {
+		this.assigmnetDate = assigmnetDate;
+	}
+
 	@Transient
 	String efor;
 	

@@ -59,7 +59,7 @@ function validateForm()
 	var statu = document.getElementById("status").value;
 	var week = document.getElementById("closeWeek").value;
 	var openWeek = document.getElementById("openWeek").value;
-	
+	var assignweek =document.getElementById("assigmnetDate").value;
 	
 	if(task == '' && is != '' )
 		{
@@ -96,9 +96,21 @@ function validateForm()
 	
 	if(week != '' && (week < openWeek))
 		{
-		sweetAlert("Hata", "Kapanma haftasi açılış haftasından önceki bir tarih olamaz", "error");
+		sweetAlert("Hata", "Kapanma tarihi açılış tarihinden önceki bir tarih olamaz", "error");
 		return false;
 		}
+	
+	if(assignweek < openWeek)
+		{
+		sweetAlert("Hata", "Atanma tarihi açılış tarihinden önceki bir tarih olamaz", "error");
+		return false;
+		}
+	
+	if(week != '' && (week < assignweek))
+	{
+	sweetAlert("Hata", "Kapanma tarihi Atanma tarihinden önceki bir tarih olamaz", "error");
+	return false;
+	}
 	
 
 	var acil=$("select[name='acil']");

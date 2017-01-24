@@ -37,7 +37,7 @@
 						  
 						   <option value="" label="--Please Select"/>
 						   <c:forEach items="${users }" var="user">
-						   		<option value="${user[0].name}" label="${user[0].name}"></option>
+						   		<option value="${user[0].name}" >${user[0].name}</option>
 						   	</c:forEach>
 							</select>
                    			</div>
@@ -47,19 +47,19 @@
 							  <div style="float:left" class="col-md-2">
 							 <select class="form-control input-sm" id="anakategori"   name="anakategori"> 
 							 	   <option value="" label="--Please Select"/>
-							 <c:forEach items="${anakategori }" var="kat">
-							   		<option value="${kat}" label="${kat}"></option>
+							 <c:forEach items="${anakategoriList}" var="kat">
+							   		<option value="${kat}">${kat}</option>
 							 </c:forEach>
  							</select>
 						  </div>
 						  
 						  <label style="float:left" for="name"> Status</label>  
 							  <div style="float:left" class="col-md-2">
-							 <select class="form-control input-sm" id="status"   name="status"> 
+							 <select class="form-control input-sm" id="status" name="status"> 
 							 	   <option value="" label="--Please Select"/>
-									<option value="WAITING" label="WAITING">
-									<option value="OPEN" label="OPEN">
-									<option value="CLOSED" label="CLOSED">						 
+									<option value="WAITING" <c:if test="${status == 'WAITING'}">selected="true"</c:if> label="WAITING">
+									<option value="OPEN" <c:if test="${status == 'OPEN'}">selected="true"</c:if> label="OPEN">
+									<option value="CLOSED" <c:if test="${status == 'CLOSED'}">selected="true"</c:if> label="CLOSED">						 
 							</select>
 						  </div>
 							

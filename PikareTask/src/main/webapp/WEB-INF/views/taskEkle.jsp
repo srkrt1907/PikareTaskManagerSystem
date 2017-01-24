@@ -110,6 +110,17 @@
   <form:input path="openWeek" type="date" placeholder="Açılış Haftasi" readonly="${!isPo}" class="form-control input-sm" required=""/> 
   </div>
 </div>
+
+<sec:authorize access="hasRole('ADMIN')">
+<div class="form-group">
+  <label class="col-md-4 control-label" for="name"  >Atanma Tarihi</label>  
+  <div class="col-md-4">
+  <form:input path="assigmnetDate" id="assigmnetDate" type="date" placeholder="Atanma Tarihi"  class="form-control input-sm" required="required"/> 
+  </div>
+</div>
+</sec:authorize>
+
+
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Kapanış Tarihi</label>  
   <div class="col-md-4">
