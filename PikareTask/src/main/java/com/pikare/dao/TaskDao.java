@@ -18,4 +18,8 @@ public interface TaskDao{
 	public List<FilterClass> getCountClose(String user, String kategori);
 	public List<String> getWeek();
 	public List<Task> getByWeek(int hafta,int yil , String user , String kategori,String anakategori,String status);
+	public List Filtrele(String kisi);
+	public List getAllOpenTask();
+	public List getOpenTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
+	public List getClosedTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
 }

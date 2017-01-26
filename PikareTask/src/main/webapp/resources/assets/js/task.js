@@ -121,7 +121,12 @@ function validateForm()
 	taskSahibi.removeAttr('disabled');
 	var kategori=$("select[name='kategori2']");
 	kategori.removeAttr('disabled');
-
+	
+	if(week != '')
+		{
+		$('#closeWeek').removeAttr('disabled'); 
+		}
+	
 	return true;
 }
 
@@ -180,5 +185,107 @@ function fnExcelReport()
     return (sa);
 }
 
+function selectedChageHafta()
+{
+	var e = document.getElementById("hafta");
+	var selected = e.options[e.selectedIndex].value;
+	
+		if(selected != "")
+			{
+			$("#firstdate").val('');
+			$("#lastdate").val('');
+			$("#firstdate").attr("disabled", true);
+			$("#lastdate").attr("disabled", true);	
+			}
+		else
+			{
+			$("#firstdate").attr("disabled", false);
+			$("#lastdate").attr("disabled", false);	
+			}
+	
+	
+	}
+
+
+
+$("#ara").click(function()
+{
+	var e = document.getElementById("kisi");
+	var strUser = e.options[e.selectedIndex].value;
+	
+	var e = document.getElementById("hafta");
+	var hafta = e.options[e.selectedIndex].value;
+	
+	var e = document.getElementById("kategori");
+	var kategori = e.options[e.selectedIndex].value;
+	var firstdateVal ="";
+	var lastdateVal ="";
+	if(hafta == ""){
+		firstdateVal = $("#firstdate").val();
+		lastdateVal = $("#lastdate").val();
+	}
+	
+	
+	$.ajax({
+		url: "../data/filtrele",
+	      type: 'GET',
+	      data: "kisi=" + strUser + "&hafta=" + hafta + "&kategori=" + kategori + "&firstdate="+firstdateVal+"&lastdate="+lastdateVal,
+	    success: function(data){
+       
+          
+          var len = data.length;
+          var tableHeaders = "<th>Kişiler</th><th>Alınan</th><th>Kapanan</th><th>Tümü</th>";        
+          $("#tableDiv").empty();
+          
+          var dataSet=[];
+          for (var int = 0; int < data.length; int++) {
+           	  var closeTask = data[int].close;
+                 var openTask = data[int].all;
+                 var assignTask = data[int].open;
+                 var name = data[int].name;
+                 var data2 = [name,assignTask,closeTask,openTask];
+                 dataSet.push(data2);
+          }
+             
+              
+              
+                             
+         
+          
+          $("#tableDiv").find("table thead tr").append(tableHeaders);
+          $("#tableDiv").append('<table id="displayTable" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead></table>');      
+          $('#displayTable').DataTable({
+              responsive: true,
+              data: dataSet,
+              dom: 'lBfrtip',
+              buttons: [
+                  'copyHtml5',
+                  'excelHtml5',
+                  'pdfHtml5'
+              ]
+          });
+          
+//          
+//          //$("#tableDiv").find("table thead tr").append(tableHeaders);  
+//           
+//          for(var i = 0; i<len; i++)
+//	      {  
+//        	  tableBody += "<tr><td>" + data[i][1] + "</td>" + "<td>" + data[i][2] + "</td><td></td><td></td></tr>" ;
+//	      }
+//          
+//          $("#tableDiv").append('<table id="displayTable" class="display" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody>'+tableBody+'</tbody></table>');
+//          
+//          
+//          $('#displayTable').dataTable(data);
+	      
+	      
+	      
+	      
+	      
+	      
+	    }
+	});
+		
+});
 
 

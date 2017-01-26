@@ -119,11 +119,33 @@
                                         <td >${task.closeWeek}</td>
                                         <td style="display: none" >${task.talepSahibi}</td>  
                                         <td style="display: none">${task.yonetici}</td>      
-                                    </tr>     
+                                    </tr> 
+                                    
+                                    
    						
 								</c:forEach>
+<!--                                     <tr> -->
+<!--                                     	<td colspan="9"></td>  -->
+<!--                                     </tr> -->
+                                    
+                                    
                                     
                                 </tbody>
+<!--                                 <tbody> -->
+<!--                                 	<tr class="odd gradeX"> -->
+<!--                                     	<td></td> -->
+<!--                                     	<td style=" text-align: left ; font: bold;">Toplam Task Sayisi</td> -->
+<%--                                     	<td style=" text-align: left ; font: bold;">${sayi}<td> --%>
+<!--                                     	<td></td> -->
+<!--                                     	<td></td> -->
+<!--                                     	<td></td> -->
+<!--                                     	<td></td> -->
+<!--                                     	<td></td> -->
+<!--                                     	<td style="display: none"></td> -->
+<!--                                     	<td style="display: none"></td> -->
+                                    	
+<!--                                     </tr>     -->
+<!--                                 </tbody> -->
                             </table>
                             
       					</div>
@@ -167,7 +189,7 @@
 			
 		    $('#dataTables').DataTable({
 		        responsive: true,
-		        dom: 'Bfrtip',
+		        dom: 'lBfrtip',
 		        buttons: [
 		            'copyHtml5',
 		            'excelHtml5',

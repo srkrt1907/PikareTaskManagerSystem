@@ -96,9 +96,9 @@
   <label class="col-md-4 control-label" for="name">Status</label>  
   <div class="col-md-4">
   <form:select class="form-control input-sm" path="status" id="status" itemValue="status" >
-   <form:option value="WAITING" />
-   <form:option value="OPEN"/>
-   <form:option value="CLOSED"/>
+   <form:option value="WAITING" > WAITING</form:option> 
+   <form:option value="OPEN"> OPEN</form:option>
+   <form:option value="CLOSED"> CLOSED</form:option>
   </form:select>
   </div>
 </div>
@@ -111,20 +111,20 @@
   </div>
 </div>
 
-<sec:authorize access="hasRole('ADMIN')">
+<%-- <sec:authorize access="hasAnyRole('ADMIN' , 'USER')"> --%>
 <div class="form-group">
   <label class="col-md-4 control-label" for="name"  >Atanma Tarihi</label>  
   <div class="col-md-4">
-  <form:input path="assigmnetDate" id="assigmnetDate" type="date" placeholder="Atanma Tarihi"  class="form-control input-sm" required="required"/> 
+  <form:input path="assigmnetDate" id="assigmnetDate" type="date" readonly="${!isAdmin}" placeholder="Atanma Tarihi"  class="form-control input-sm" required="required"/> 
   </div>
 </div>
-</sec:authorize>
+
 
 
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Kapanış Tarihi</label>  
   <div class="col-md-4">
-  <form:input path="closeWeek" type="date" placeholder="Kapanış Haftasi" disabled="${!isUser}" class="form-control input-sm" name="closeWeek" required=""/> 
+  <form:input path="closeWeek" type="date" placeholder="Kapanış Haftasi" disabled="${!isUser}" class="form-control input-sm" name="closeWeek" id="closeWeek" required=""/> 
   </div>
 </div>
 
@@ -161,16 +161,18 @@
 <!--   </div> -->
 <!-- </div> -->
 
+
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Kategori</label>  
   <div class="col-md-4">
-  <form:select class="form-control input-sm"  disabled="${!isPo}" itemValue="kategori" name="kategori2" id="kategori2" path="kategori"> 
+  <form:select class="form-control input-sm"  disabled="${isPo }" itemValue="kategori" name="kategori2" id="kategori2" path="kategori"> 
    <c:forEach items="${kategori }" var="kat">
-   		<form:option value="${kat.kategori}"></form:option>
+   		<form:option value="${kat.kategori}">${kat.kategori}</form:option>
    	</c:forEach>
 </form:select>
 </div>
 </div>
+
 
 <div class="form-group">								
 		<div class="col-md-16" >

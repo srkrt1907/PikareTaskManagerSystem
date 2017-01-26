@@ -35,6 +35,8 @@ public class TaskDaoImp implements TaskDao {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	
+	
 	@Override
 	public void addTask(Task task) {
 		Session session = null;
@@ -237,14 +239,12 @@ public class TaskDaoImp implements TaskDao {
 		        //String closeWeek = Integer.toString(yil) +"-"+Integer.toString(hafta);
  		        temp.setCount(new BigDecimal(sayi).intValueExact());
 		        temp.setCloseWeek("");
-		        temp.setUser(ad);
-		        
-		        
+		        temp.setUser(ad); 
 		        list.add(temp);
 		    }
 		    
 		    txn.commit();
-		    System.out.println("ba�arli bir �ekilde eklendi");
+		    System.out.println("başarili bir şekilde eklendi");
 
 		} catch (Exception e) { 
 			System.out.println(e);
@@ -357,6 +357,188 @@ public class TaskDaoImp implements TaskDao {
 		}
 		return task;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List Filtrele(String kisi) {
+		List list = null;
+		Session session = null;
+		Transaction txn = null;
+		try {  
+		    session = sessionFactory.openSession();  
+		    txn = session.beginTransaction();
+		    String que = "SELECT kategori,taskSahibi,COUNT(*) FROM Task where taskSahibi='"+ kisi +"' and kategori IS NOT NULL group by kategori , taskSahibi ORDER BY taskSahibi ";
+		    Query query = session.createQuery(que); //You will get Weayher object
+		    list = (List<Task>)query.list();
+		    query.list().size();
+		    txn.commit();
+		    System.out.println("başarili bir şekilde eklendi");
 
+		} catch (Exception e) { 
+			
+			
+		    System.out.println(e.getMessage());
+		} finally {
+		    if (!txn.wasCommitted()) {
+		        txn.rollback();
+		    }
+
+		    session.flush();  
+		    session.close();   
+		}
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List getClosedTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori) {
+		
+		List list = new ArrayList<String>();
+		Session session = null;
+		Transaction txn = null;
+		try {  
+		    session = sessionFactory.openSession();  
+		    txn = session.beginTransaction();
+		    
+		  //  String sql = "SELECT distinct Task.taskSahibi , ct FROM  Task LEFT OUTER JOIN ( SELECT taskSahibi, COUNT(*) as ct FROM Task where status='CLOSED' ";      		
+		  //  String groupBy = " GROUP BY taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
+		    
+		    
+		    String sql = "select taskSahibi , count(*) from Task where status = 'CLOSED' ";
+		    String groupBy = " group by taskSahibi";
+		    
+		    if(!kisi.isEmpty())
+		    	sql += " AND taskSahibi = '" + kisi+ "' ";
+		    if(hafta > 0)
+		    	sql += " AND WEEKOFYEAR(closeWeek) = " + hafta + " ";
+		    if(yil > 0) 
+		    	sql += " AND YEAR(closeWeek) = '" +yil+"' ";
+		    	
+		    if(!ilkTarih.isEmpty())
+		    		sql += " AND closeWeek >= '" + ilkTarih+ "' ";
+		    
+		    if(!SonTarih.isEmpty())
+	    		sql += " AND closeWeek <= '" + SonTarih+ "' ";
+		   
+		    if(!kategori.isEmpty())
+	    		sql += " AND closeWeek >= '" + ilkTarih+ "' ";
+	    
+		    sql += groupBy;
+		    
+		    Query query = session.createQuery(sql); //You will get Weayher object
+		    list = query.list();
+		    query.list().size();
+		    txn.commit();
+		    System.out.println("başarili bir şekilde eklendi");
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		    return null;
+		} finally {
+		    if (!txn.wasCommitted()) {
+		        txn.rollback();
+		    }
+    
+		    session.flush();  
+		    session.close();   
+		}
+		return list;
+		
+	}
+	
+	@Override
+	public List getOpenTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori) {//ALDİGİ TASKLAR
+		
+		List list = null;
+		Session session = null;
+		Transaction txn = null;
+		try {  
+		    session = sessionFactory.openSession();  
+		    txn = session.beginTransaction();
+		    
+		    //String sql = "SELECT distinct Task.taskSahibi,  COALESCE(ct,0) FROM  Task LEFT JOIN(SELECT Task.taskSahibi, COUNT(*) as ct FROM Task where status='OPEN' ";      		
+		    //String groupBy = "GROUP BY Task.taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
+		    
+		    String sql = "select taskSahibi , count(*) from Task where status = 'OPEN' ";
+		    String groupBy = " group by taskSahibi";
+		    
+		    if(!kisi.isEmpty())
+		    	sql += " AND taskSahibi = '" + kisi+ "' ";
+		    if(hafta > 0)
+		    	sql += " AND WEEKOFYEAR(assigmnetDate) = " + hafta + " ";
+		    if(yil > 0) 
+		    	sql += " AND YEAR(assigmnetDate) = '" +yil+"' ";
+		    	
+		    if(!ilkTarih.isEmpty())
+		    		sql += " AND assigmnetDate >= '" + ilkTarih+ "' ";
+		    
+		    if(!SonTarih.isEmpty())
+	    		sql += " AND assigmnetDate <= '" + SonTarih+ "' ";
+		   
+		    if(!kategori.isEmpty())
+	    		sql += " AND assigmnetDate >= '" + ilkTarih+ "' ";
+	    
+		    sql += groupBy;
+		    
+		    Query query = session.createQuery(sql); //You will get Weayher object
+		    
+		    list = query.list();
+		    query.list().size();
+		    txn.commit();
+		    System.out.println("başarili bir şekilde eklendi");
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		    return null;
+		} finally {
+		    if (!txn.wasCommitted()) {
+		        txn.rollback();
+		    }
+
+		    session.flush();  
+		    session.close();   
+		}
+		return list;
+		
+	}
+	@Override
+public List getAllOpenTask() {//ALDİGİ TASKLAR
+	
+	List list = null;
+	Session session = null;
+	Transaction txn = null;
+	try {  
+	    session = sessionFactory.openSession();  
+	    txn = session.beginTransaction();
+	    
+	    //String sql = "SELECT distinct Task.taskSahibi,  COALESCE(ct,0) FROM  Task LEFT JOIN(SELECT Task.taskSahibi, COUNT(*) as ct FROM Task where status='CLOSED' ";      		
+	    //String groupBy = "GROUP BY Task.taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
+	       
+	    String sql = "select taskSahibi , count(*) from Task where status = 'OPEN' ";
+	    String groupBy = " group by taskSahibi";
+	    sql += groupBy;
+	    
+	    Query query = session.createQuery(sql); //You will get Weayher object
+	    
+	    list = query.list();
+	    query.list().size();
+	    txn.commit();
+	    System.out.println("başarili bir şekilde eklendi");
+
+	} catch (Exception e) { 
+	    System.out.println(e.getMessage());
+	    return null;
+	} finally {
+	    if (!txn.wasCommitted()) {
+	        txn.rollback();
+	    }
+	    session.flush();  
+	    session.close();   
+	}
+	return list;
+	
+}
+	
 
 }

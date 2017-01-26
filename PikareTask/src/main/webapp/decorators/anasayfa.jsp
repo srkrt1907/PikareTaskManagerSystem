@@ -30,7 +30,9 @@
 	 <link href="../resources/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
 
     <!-- DataTables Responsive CSS -->
-    <link href="../resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+<!--     <link href="../resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    
     <link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet">
     
     <!-- Custom Fonts -->
@@ -75,8 +77,9 @@
             </div>
             <!-- /.navbar-header -->
 
+				
             <ul class="nav navbar-top-links navbar-right">
-              
+              	<li> <sec:authentication property="principal.username" /> </li> 
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -109,14 +112,13 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
                                 <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
+<!--                                 <button class="btn btn-default" type="button"> -->
+<!--                                     <i class="fa fa-search"></i> -->
+<!--                                 </button> -->
                             </span>
                             </div>
-                            <!-- /input-group -->
+<!--                             /input-group -->
                         </li>
                         <li>
                             <a href="home"><i class="fa fa-dashboard fa-fw"></i> Raporlama</a>

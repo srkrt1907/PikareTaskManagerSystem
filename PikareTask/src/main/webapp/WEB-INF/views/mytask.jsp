@@ -107,7 +107,7 @@
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
         responsive: true,
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',
         buttons: [
             'copyHtml5',
             'excelHtml5',
@@ -116,7 +116,7 @@ $(document).ready(function() {
     });
     $('#dataTables-example2').DataTable({
         responsive: true,
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',
         buttons: [
             'copyHtml5',
             'excelHtml5',

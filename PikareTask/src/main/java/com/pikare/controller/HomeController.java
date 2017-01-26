@@ -268,15 +268,18 @@ public class HomeController {
 		model2.addObject("weekList", taskDao.getWeek());
 		model2.addObject("week", week);
 		model2.addObject("taskSahibi", user);
-		model2.addObject("anakategori", kategori);
+		model2.addObject("anakategori", anakategori);
 		model2.addObject("status", status);
 		
 		List<Users> users = userDao.getByUserRoles();
 		model2.addObject("users", users);
-		
+		model2.addObject("sayi" , task.size());
 		
 		List<String> anakategoriList = kategoriDao.getAnaKategori();
-		model2.addObject("anakategori", anakategoriList);
+		
+		
+		
+		model2.addObject("anakategoriList", anakategoriList);
 		
 		return model2;
 	}
@@ -316,7 +319,7 @@ public class HomeController {
 		model.addObject("eforList", efor);
 		
 		Task task = taskDao.getTaskById(taskNo);
-		if(pikareSession.getRole().equals("ROLE_USER"))
+		if(pikareSession.getRole().equals("ROLE_USER") && task.getCloseWeek() == null)
 		{
 			task.setCloseWeek(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
 		}
@@ -351,10 +354,14 @@ public class HomeController {
 		try {
 			if(task.getId() > 0)
 			{
-				if(!task.getTaskSahibi().isEmpty() && pikareSession.getName().toUpperCase().equals(task.getTaskSahibi()) || !pikareSession.getRole().equals("ROLE_USER"))
+				if(pikareSession.getName().equals("admin")  || !task.getTaskSahibi().isEmpty() && pikareSession.getName().toUpperCase().equals(task.getTaskSahibi()) || !pikareSession.getRole().equals("ROLE_USER"))
 				{
-					if(pikareSession.getRole().equals("ROLE_ADMIN"))
-						task.setCloseWeek(null);
+					if(pikareSession.getRole().equals("ROLE_ADMIN"))						
+					{	
+						if(!task.getStatus().equals("CLOSED"))
+							task.setCloseWeek(null);
+					}
+						
 					
 					taskDao.updateTask(task);
 					model.addObject("msg", "Guncelleme Başarili bir şekilde güncellendi.");
@@ -447,6 +454,24 @@ public class HomeController {
 			List<Kategori> attributeValue =  kategoriDao.get();
 			model.addObject("kategoriler", attributeValue);
 			return model;
+		}
+		
+		@RequestMapping(value = "secure/deneme", method = RequestMethod.GET)
+		public ModelAndView deneme() {
+			
+			
+			
+			ModelAndView model2 = new ModelAndView("deneme");
+			model2.addObject("weekList", taskDao.getWeek());	
+			
+			List<Users> users = userDao.getByUserRoles();
+			model2.addObject("users", users);
+			
+			
+			List<String> anakategori = kategoriDao.getAnaKategori();
+			model2.addObject("anakategori", anakategori);
+			
+			return model2;
 		}
 		
 		void setSession()

@@ -234,7 +234,7 @@ public class UserDaoImp implements UserDao {
 		try {  
 		    session = sessionFactory.openSession();  
 		    txn = session.beginTransaction();
-		    Query query = session.createQuery(" from Users as item join item.userRole as roles where roles.role= 'ROLE_USER'"); //You will get Weayher object
+		    Query query = session.createQuery(" from Users as item join item.userRole as roles where roles.role= 'ROLE_USER' order by name"); //You will get Weayher object
 		    users = (List<Users>)query.list();
 		    txn.commit();
 		    System.out.println("başarli bir şekilde eklendi");

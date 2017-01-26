@@ -1,5 +1,7 @@
 package com.pikare.controller;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pikare.dao.TaskDao;
+import com.pikare.dao.UserDao;
 import com.pikare.model.FilterClass;
 import com.pikare.model.Task;
+import com.pikare.model.Users;
+import com.pikare.session.GenericResponse;
 
 @Controller
 @RequestMapping("/data")
@@ -21,16 +26,106 @@ public class TaskController {
 	@Autowired
 	TaskDao taskDao;
 	
-	
+	@Autowired
+	UserDao userDao;
 	
 	
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/taskAll", method = RequestMethod.GET)
-	@ResponseBody List<FilterClass> taskGetir(@RequestParam(value= "user") String user)
+	@RequestMapping(value = "/filtrele", method = RequestMethod.GET)
+	@ResponseBody List<GenericResponse> taskGetir(@RequestParam(value= "kisi") String kisi,
+			@RequestParam(value= "hafta") String week,
+			@RequestParam(value= "kategori") String kategori,
+			@RequestParam(value= "firstdate") String firsdate,
+			@RequestParam(value= "lastdate") String lastdate
+			)
 	{
-		List<FilterClass> list = taskDao.getCountClose("","");
-		return list;
+		//List list = taskDao.Filtrele(kisi);
+		
+		int hafta = 0;
+		int yil = 0;
+		if(!week.isEmpty())
+		{
+			String[] temp = week.split("-");
+			yil = Integer.parseInt(temp[0]);
+			hafta = Integer.parseInt(temp[1]);
+		}
+		
+		
+		List allTask =  taskDao.getAllOpenTask();
+		List closeTask = taskDao.getClosedTask(kisi, hafta,yil, firsdate, lastdate, kategori);
+		List assignWeek = taskDao.getOpenTask(kisi, hafta,yil,  firsdate, lastdate, kategori);		
+		List<Users> users = userDao.getByUserRoles();	
+		List<GenericResponse> responseList = new ArrayList<GenericResponse>();
+		
+		
+		Iterator itr = users.listIterator();
+		while(itr.hasNext())
+		{
+			Object[] object = (Object[])itr.next();	
+			Users user = (Users)object[0];
+					
+			boolean bulundu = false;
+			GenericResponse response = new GenericResponse();
+			response.setName(user.getName());
+			for(int i = 0 ; i< allTask.size() ; i++)
+			{
+				Object[] obj = (Object[])allTask.get(i);
+				String name = (String)obj[0];
+				
+				if(name.equals(user.getName()))
+				{
+					bulundu = true;
+					Long sayi = (Long)obj[1];
+					response.setAll(sayi.toString());
+				}			
+			}
+			if(!bulundu)
+				response.setAll(new String("0"));
+			else
+				bulundu = false;
+			
+			for(int i = 0 ; i< closeTask.size() ; i++)
+			{
+				Object[] obj = (Object[])closeTask.get(i);
+				String name = (String)obj[0];
+				
+				if(name.equals(user.getName()))
+				{
+					bulundu = true;
+					Long sayi = (Long)obj[1];
+					response.setClose(sayi.toString());
+				}			
+			}
+			if(!bulundu)
+				response.setClose(new String("0"));
+			else
+				bulundu = false;
+			
+			for(int i = 0 ; i< assignWeek.size() ; i++)
+			{
+				Object[] obj = (Object[])assignWeek.get(i);
+				String name = (String)obj[0];
+				
+				if(name.equals(user.getName()))
+				{
+					bulundu = true;
+					Long sayi = (Long)obj[1];
+					response.setOpen(sayi.toString());
+				}			
+			}
+			if(!bulundu)
+				response.setOpen(new String("0"));
+			else
+				bulundu = false;
+			
+			
+			responseList.add(response);
+			
+		}	
+		return responseList;
 	}
+	
+
 	
 	
 
