@@ -41,7 +41,7 @@ public class Task {
 	String talepSahibi;
 	String yonetici;
 	String priority;
-	Date assigmnetDate;
+	Date assigmnetDate = new Date(Calendar.getInstance().getTime().getTime());
 	
 	public Date getAssigmnetDate() {
 		return assigmnetDate;

@@ -125,6 +125,28 @@ public class TaskController {
 		return responseList;
 	}
 	
+	@RequestMapping(value = "/taskliste", method = RequestMethod.GET)
+    public @ResponseBody List<Task> controllerMethod(@RequestParam("hafta") String week,
+    		@RequestParam("kisi") String user,
+    		@RequestParam(value = "kategori" , defaultValue="") String anakategori,
+    		@RequestParam("status" ) String status,
+    		@RequestParam(value= "firstdate" , defaultValue ="") String firstdate,
+    		@RequestParam(value= "lastdate" , defaultValue ="") String lastdate
+)
+	{	
+		int hafta = 0;
+		int yil = 0;
+		if(!week.isEmpty())
+		{
+			String[] temp = week.split("-");
+			yil = Integer.parseInt(temp[0]);
+			hafta = Integer.parseInt(temp[1]);
+		}
+		
+		List<Task> task = taskDao.getByWeek(hafta,yil,user,"",anakategori,status,firstdate,lastdate);
+
+		return task;
+	}
 
 	
 	

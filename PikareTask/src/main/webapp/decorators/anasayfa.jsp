@@ -23,16 +23,9 @@
 
     <!-- Custom CSS -->
     <link href="../resources/dist/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="../resources/vendor/morrisjs/morris.css" rel="stylesheet">
 	
 	 <link href="../resources/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
-
-    <!-- DataTables Responsive CSS -->
-<!--     <link href="../resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"> -->
-    <link href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
-    
+    <link href="../resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"> 
     <link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet">
     
     <!-- Custom Fonts -->
@@ -41,10 +34,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" type="text/css">
 	
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">  
-    <!-- Custom CSS -->
-    <link href="../resoruces/dist/css/sb-admin-2.css" rel="stylesheet">
-
+		<link href="../resources/assets/css/loading.css" rel="stylesheet" type="text/css"/>
 	<style type="text/css">
 .field-error .control-label,
 .field-error .help-block,
@@ -162,10 +152,7 @@
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../resources/vendor/metisMenu/metisMenu.min.js"></script>
 
-    <!-- Morris Charts JavaScript -->
-    <script src="../resources/vendor/raphael/raphael.min.js"></script>
-    <script src="../resources/vendor/morrisjs/morris.min.js"></script>
-    <script src="../resources/data/morris-data.js"></script>
+
 
     <!-- Custom Theme JavaScript -->
     <script src="../resources/dist/js/sb-admin-2.js"></script>
@@ -189,9 +176,7 @@
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 	
 	
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>	
+
 	
 	
 	<dec:getProperty property="page.local_script"></dec:getProperty>

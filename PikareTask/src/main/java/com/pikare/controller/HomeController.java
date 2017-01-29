@@ -50,8 +50,6 @@ import com.pikare.model.Task;
 import com.pikare.model.UserRole;
 import com.pikare.model.Users;
 import com.pikare.session.PikareSession;
-import com.pikare.zk.charts.LineBasicComposer;
-import com.pikare.zk.charts.LineBasicData;
 
 @Controller
 public class HomeController {
@@ -211,46 +209,48 @@ public class HomeController {
 		return "redirect:/login?logout";//You can redirect wherever you want, but generally it's a good practice to show login screen again.
 	}
 	
-	@RequestMapping(value = "/secure/home", method = RequestMethod.GET)
-	ModelAndView home()
-	{
-		
-		ModelAndView model2 = new ModelAndView("home");
-		model2.addObject("weekList", taskDao.getWeek());	
-		
-		List<Users> users = userDao.getByUserRoles();
-		model2.addObject("users", users);
-		
-		
-		List<Kategori> kategoriler = kategoriDao.get();
-		model2.addObject("kategoriler", kategoriler);
-		
-		List<String> anakategori = kategoriDao.getAnaKategori();
-		model2.addObject("anakategori", anakategori);
-		
-		if(pikareSession.getUsername().isEmpty())
-		{
-			setSession();
-		}
-		
-
-		//LineBasicData lineBasicData = new LineBasicData(taskDao.getCountClose("","")); 
-		
-		
-		model2.addObject("task", new Task());
-		model2.addObject("week", "");
-		model2.addObject("taskSahibi", "");
-		model2.addObject("kategori", "");
-		return model2;
-	}
+//	@RequestMapping(value = "/secure/home8555", method = RequestMethod.GET)
+//	ModelAndView home()
+//	{
+//		
+//		ModelAndView model2 = new ModelAndView("home");
+//		model2.addObject("weekList", taskDao.getWeek());	
+//		
+//		List<Users> users = userDao.getByUserRoles();
+//		model2.addObject("users", users);
+//		
+//		
+//		List<Kategori> kategoriler = kategoriDao.get();
+//		model2.addObject("kategoriler", kategoriler);
+//		
+//		List<String> anakategori = kategoriDao.getAnaKategori();
+//		model2.addObject("anakategori", anakategori);
+//		
+//		if(pikareSession.getUsername().isEmpty())
+//		{
+//			setSession();
+//		}
+//		
+//
+//		//LineBasicData lineBasicData = new LineBasicData(taskDao.getCountClose("","")); 
+//		
+//		
+//		model2.addObject("task", new Task());
+//		model2.addObject("week", "");
+//		model2.addObject("taskSahibi", "");
+//		model2.addObject("kategori", "");
+//		return model2;
+//	}
 
 	
 	@RequestMapping(value = "/secure/home2", method = RequestMethod.GET)
     public ModelAndView controllerMethod(@RequestParam("taskWeek") String week,
     		@RequestParam("taskSahibi") String user,
-    		@RequestParam("kategori") String kategori,
+    		@RequestParam(value = "kategori" , defaultValue ="" ) String kategori,
     		@RequestParam("anakategori") String anakategori,
-    		@RequestParam("status") String status
+    		@RequestParam("status" ) String status,
+    		@RequestParam(value= "firstdate" , defaultValue ="") String firstdate,
+    		@RequestParam(value= "lastdate" , defaultValue ="") String lastdate
 )
 	{	
 		int hafta = 0;
@@ -262,7 +262,7 @@ public class HomeController {
 			hafta = Integer.parseInt(temp[1]);
 		}
 		
-		List<Task> task = taskDao.getByWeek(hafta,yil,user,kategori,anakategori,status);
+		List<Task> task = taskDao.getByWeek(hafta,yil,user,kategori,anakategori,status,"","");
 		ModelAndView model2 = new ModelAndView("home");
 		model2.addObject("Task", task);
 		model2.addObject("weekList", taskDao.getWeek());
@@ -310,7 +310,8 @@ public class HomeController {
 		ModelAndView model = new ModelAndView("taskEkle");
 		
 		List<Users> users = userDao.getByUserRoles();
-		model.addObject("users", users);
+		model.addObject("users", users); 
+		
 		
 		List<Kategori> kategori = kategoriDao.get();
 		model.addObject("kategori", kategori);
@@ -319,6 +320,16 @@ public class HomeController {
 		model.addObject("eforList", efor);
 		
 		Task task = taskDao.getTaskById(taskNo);
+		if((pikareSession.getRole().equals("ROLE_USER") || pikareSession.getRole().equals("ROLE_ADMIN")) && task.getCloseWeek() == null )
+		{
+			task.setCloseWeek(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		}
+		if(pikareSession.getRole().equals("ROLE_PO") && task.getAssigmnetDate() == null)
+		{
+			task.setAssigmnetDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		}
+			
+		
 		if(pikareSession.getRole().equals("ROLE_USER") && task.getCloseWeek() == null)
 		{
 			task.setCloseWeek(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
@@ -354,12 +365,20 @@ public class HomeController {
 		try {
 			if(task.getId() > 0)
 			{
-				if(pikareSession.getName().equals("admin")  || !task.getTaskSahibi().isEmpty() && pikareSession.getName().toUpperCase().equals(task.getTaskSahibi()) || !pikareSession.getRole().equals("ROLE_USER"))
+				if(pikareSession.getRole().equals("ROLE_PO") || pikareSession.getName().equals("admin")  || !task.getTaskSahibi().isEmpty() && pikareSession.getName().toUpperCase().equals(task.getTaskSahibi()) || !pikareSession.getRole().equals("ROLE_USER"))
 				{
 					if(pikareSession.getRole().equals("ROLE_ADMIN"))						
 					{	
 						if(!task.getStatus().equals("CLOSED"))
 							task.setCloseWeek(null);
+					}
+					if(pikareSession.getRole().equals("ROLE_PO"))
+					{
+						if(!task.getStatus().equals("OPEN") && !task.getStatus().equals("CLOSED") )
+						{
+							task.setAssigmnetDate(null);
+							task.setCloseWeek(null);
+						}
 					}
 						
 					
@@ -378,6 +397,7 @@ public class HomeController {
 				if(pikareSession.getRole().equals("ROLE_PO"))
 				{
 					task.setCloseWeek(null);
+					task.setAssigmnetDate(null);
 					taskDao.addTask(task);
 					model.addObject("task",new Task());
 					model.setViewName("taskEkle");
@@ -456,12 +476,15 @@ public class HomeController {
 			return model;
 		}
 		
-		@RequestMapping(value = "secure/deneme", method = RequestMethod.GET)
+		@RequestMapping(value = "secure/home", method = RequestMethod.GET)
 		public ModelAndView deneme() {
 			
+			if(pikareSession.getUsername().isEmpty())
+			{
+				setSession();
+			}
 			
-			
-			ModelAndView model2 = new ModelAndView("deneme");
+			ModelAndView model2 = new ModelAndView("home");
 			model2.addObject("weekList", taskDao.getWeek());	
 			
 			List<Users> users = userDao.getByUserRoles();
@@ -469,7 +492,7 @@ public class HomeController {
 			
 			
 			List<String> anakategori = kategoriDao.getAnaKategori();
-			model2.addObject("anakategori", anakategori);
+			model2.addObject("anakategoriList", anakategori);
 			
 			return model2;
 		}
@@ -487,15 +510,6 @@ public class HomeController {
 				pikareSession.setUsername(user.getUsername());
 				pikareSession.setRole(user.getUserRole().get(0).getRole());
 			}
-		}
-		
-//		@InitBinder
-//		protected void initBinder(WebDataBinder binder) {
-//
-//		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//		    binder.registerCustomEditor(Date.class,"closeWeek", new CustomDateEditor(dateFormat,false));
-//
-//		}
-		
+		}	
 }
 

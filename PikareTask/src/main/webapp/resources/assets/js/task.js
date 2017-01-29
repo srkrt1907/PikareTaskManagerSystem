@@ -100,7 +100,7 @@ function validateForm()
 		return false;
 		}
 	
-	if(assignweek < openWeek)
+	if(assignweek != '' && assignweek < openWeek)
 		{
 		sweetAlert("Hata", "Atanma tarihi açılış tarihinden önceki bir tarih olamaz", "error");
 		return false;
@@ -151,40 +151,6 @@ function validateidenticalForm()
 	return true;
 }
 
-function fnExcelReport()
-{
-    var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
-    var textRange; var j=0;
-    tab = document.getElementById('dataTables'); // id of table
-
-    for(j = 0 ; j < tab.rows.length ; j++) 
-    {     
-        tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-        //tab_text=tab_text+"</tr>";
-    }
-
-    tab_text=tab_text+"</table>";
-    tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-    tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-    tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE "); 
-
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
-    {
-        txtArea1.document.open("txt/html","replace");
-        txtArea1.document.write(tab_text);
-        txtArea1.document.close();
-        txtArea1.focus(); 
-        sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
-    }  
-    else                 //other browser not tested on IE 11
-        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
-
-    return (sa);
-}
-
 function selectedChageHafta()
 {
 	var e = document.getElementById("hafta");
@@ -206,10 +172,32 @@ function selectedChageHafta()
 	
 	}
 
+function selectedChageType()
+{
+	var e = document.getElementById("listtype");
+	var selected = e.options[e.selectedIndex].value;
+	
+		if(selected == "2")
+			{
+			$("#kisi").val('');
+			$("#kisi").attr("disabled", true);
+			$("#status").val('');
+			$("#status").attr("disabled", true);	
+			
+			}
+		else
+			{
+			$("#kisi").attr("disabled", false);
+			$("#status").attr("disabled", false);	
+			}
+	}
+
 
 
 $("#ara").click(function()
 {
+	$body = $("body");
+	$body.addClass("loading");
 	var e = document.getElementById("kisi");
 	var strUser = e.options[e.selectedIndex].value;
 	
@@ -218,6 +206,13 @@ $("#ara").click(function()
 	
 	var e = document.getElementById("kategori");
 	var kategori = e.options[e.selectedIndex].value;
+	
+	var e = document.getElementById("listtype");
+	var type = e.options[e.selectedIndex].value;
+	
+	var e = document.getElementById("status");
+	var status = e.options[e.selectedIndex].value;
+	
 	var firstdateVal ="";
 	var lastdateVal ="";
 	if(hafta == ""){
@@ -225,67 +220,138 @@ $("#ara").click(function()
 		lastdateVal = $("#lastdate").val();
 	}
 	
+	if ( $.fn.DataTable.isDataTable('#displayTable') ) {
+		  $('#displayTable').DataTable().destroy();
+		  $('#displayTable').empty();
+		}
+
+		//$('#displayTable tbody').empty();
 	
+	 //$('#displayTable').dataTable().fnDestroy();
+	if(type == "2")
+		{
+		
+		$.ajax({
+			url: "../data/filtrele",
+		      type: 'GET',
+		      data: "kisi=" + strUser + "&hafta=" + hafta + "&kategori=" + kategori + "&firstdate="+firstdateVal+"&lastdate="+lastdateVal,
+		    success: function(data){
+		    	
+		    	$('#baslik').html('Kişi Bazli Sayi Tablosu');
+		    	$('#panelid').css('display', 'block');	
+	          
+//	          var tableHeaders = "<th></th><th>Alınan</th><th>Kapanan</th><th>Tümü</th>";        
+	          
+		    	var column_names = ['Kişiler','Alınan','Kapanan','Tümü'];
+		        var columns = [];
+		        for (var i = 0; i < column_names.length; i++) {
+		            columns[i] = {
+		                'title': column_names[i]
+		                
+		            }
+		        };
+	          var dataSet=[];
+	          for (var int = 0; int < data.length; int++) {
+	           	  var closeTask = data[int].close;
+	                 var openTask = data[int].all;
+	                 var assignTask = data[int].open;
+	                 var name = data[int].name;
+	                 var data2 = [name,assignTask,closeTask,openTask];
+	                 dataSet.push(data2);
+	          }
+	          
+	          
+//	          $("#datatablesdiv").append('<table id="displayTable" class="table responsive table-striped table-bordered table-hover" cellspacing="0"  width="100%">');	
+//	          $("#tableDiv").find("table thead tr").append(tableHeaders);
+//	          $("#tableDiv").append('<table id="displayTable" class="table table-striped table-bordered" ><thead><tr>' + tableHeaders + '</tr></thead></table>');      
+	          $('#displayTable').DataTable({        
+	        	  columns: columns,
+	        	  data: dataSet,  
+	              dom: 'lBfrtip',
+	              buttons: [
+	                  'copyHtml5',
+	                  'excelHtml5',
+	                  'pdfHtml5'
+	              ]   
+	              
+	          });      
+	          $body.removeClass("loading"); 
+	    }
+	});
+			
+}
+	else
+	{
 	$.ajax({
-		url: "../data/filtrele",
+		url: "../data/taskliste",
 	      type: 'GET',
-	      data: "kisi=" + strUser + "&hafta=" + hafta + "&kategori=" + kategori + "&firstdate="+firstdateVal+"&lastdate="+lastdateVal,
+	      data: "kisi=" + strUser + "&hafta=" + hafta + "&kategori=" + kategori + "&firstdate="+firstdateVal+"&lastdate="+lastdateVal + "&status="+status,
 	    success: function(data){
-       
+	    	
+	    	$('#baslik').html('Task Listesi');
+	    	$('#panelid').css('display', 'block');
+	    	
           
-          var len = data.length;
-          var tableHeaders = "<th>Kişiler</th><th>Alınan</th><th>Kapanan</th><th>Tümü</th>";        
-          $("#tableDiv").empty();
+//          var tableHeaders = "  <th style='width: 5%'>Task No</th><th>Task Adi</th><th>Task Assigment</th><th style='width: 5%'>Aciliyet</th> "
+//          							+"<th style='width: 5%'>İş Tanımı</th><th style='width: 7%'>Status</th>"
+//                                   +" <th>Kategori</th> "
+//                                    +"<th >Açılış Tar.</th>"
+//                                    +"<th>Başlama Tar.</th>"
+//                                    +"<th>Kapanış Tar.</th>"
+//                                  +"<th>Talep Sahibi</th>"
+//                                  +"<th>Talep Yöneticisi</th>";        
+          
+          
+          var column_names = ['Task No','Task Adi','Task Assigment','Aciliyet','İş Tanımı','Kategori','Açılış Tar.','Başlama Tar.','Kapanış Tar.','Talep Sahibi','Talep Yöneticisi'];
+	        var columns = [];
+	        for (var i = 0; i < column_names.length; i++) {
+	            columns[i] = {
+	                'title': column_names[i]   
+	            }
+	        };
+          
           
           var dataSet=[];
           for (var int = 0; int < data.length; int++) {
-           	  var closeTask = data[int].close;
-                 var openTask = data[int].all;
-                 var assignTask = data[int].open;
-                 var name = data[int].name;
-                 var data2 = [name,assignTask,closeTask,openTask];
+                 var data2 = [data[int].taskNo,data[int].taskName,data[int].taskSahibi,data[int].acil,data[int].isTanimi,data[int].status,data[int].kategori,data[int].openWeek,data[int].assigmnetDate,data[int].closeWeek,data[int].talepSahibi,data[int].yonetici];
                  dataSet.push(data2);
           }
-             
-              
-              
-                             
-         
           
-          $("#tableDiv").find("table thead tr").append(tableHeaders);
-          $("#tableDiv").append('<table id="displayTable" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead></table>');      
-          $('#displayTable').DataTable({
-              responsive: true,
+//          $("#datatablesdiv").append('<table id="displayTable" class="table responsive table-striped table-bordered table-hover" cellspacing="0"  width="100%">');
+//          $("#tableDiv").find("table thead tr").append(tableHeaders);
+//          $("#tableDiv").append('<table id="displayTable" class="table table-striped table-bordered"><thead><tr>' + tableHeaders + '</tr></thead></table>');      
+          $('#displayTable').DataTable({        
               data: dataSet,
+              columns: columns,
               dom: 'lBfrtip',
               buttons: [
                   'copyHtml5',
                   'excelHtml5',
                   'pdfHtml5'
-              ]
-          });
-          
-//          
-//          //$("#tableDiv").find("table thead tr").append(tableHeaders);  
-//           
-//          for(var i = 0; i<len; i++)
-//	      {  
-//        	  tableBody += "<tr><td>" + data[i][1] + "</td>" + "<td>" + data[i][2] + "</td><td></td><td></td></tr>" ;
-//	      }
-//          
-//          $("#tableDiv").append('<table id="displayTable" class="display" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody>'+tableBody+'</tbody></table>');
-//          
-//          
-//          $('#displayTable').dataTable(data);
-	      
-	      
-	      
-	      
-	      
-	      
-	    }
-	});
+              ],
+              columnDefs: [
+                           {
+                               targets:0,
+                               render: function ( data, type, row, meta ) {
+                                   if(type === 'display'){
+                                	   data = '<a href="taskupdate?taskid=' + encodeURIComponent(data) + '">' + data + '</a>';
+                                   }
+                                   return data;
+                               }
+                           }
+                       ]  
+              
+          }); 
+          $body.removeClass("loading"); 
+      
+    }
+});
 		
+	}
+
+	
+	
+	
 });
 
 

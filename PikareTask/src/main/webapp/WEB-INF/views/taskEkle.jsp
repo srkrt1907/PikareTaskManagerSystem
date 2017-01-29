@@ -84,10 +84,9 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name" >Aciliyet</label>  
   <div class="col-md-4">
-  <form:select class="form-control input-sm" path="acil" disabled="${!isPo}" itemValue="acil" name="acil" id="acil" >
-   <form:option value="NORMAL"/>
-   <form:option value="ACIL"/>
-   
+  <form:select class="form-control input-sm" path="acil" disabled="${isUser}" itemValue="acil" name="acil" id="acil" >
+   <form:option value="NORMAL">NORMAL</form:option> 
+   <form:option value="ACIL">ACIL</form:option> 
   </form:select>
   </div>
 </div>
@@ -96,9 +95,9 @@
   <label class="col-md-4 control-label" for="name">Status</label>  
   <div class="col-md-4">
   <form:select class="form-control input-sm" path="status" id="status" itemValue="status" >
-   <form:option value="WAITING" > WAITING</form:option> 
-   <form:option value="OPEN"> OPEN</form:option>
-   <form:option value="CLOSED"> CLOSED</form:option>
+   <form:option value="WAITING" >WAITING</form:option> 
+   <form:option value="OPEN">OPEN</form:option>
+   <form:option value="CLOSED">CLOSED</form:option>
   </form:select>
   </div>
 </div>
@@ -148,18 +147,6 @@
   <form:input path="yonetici" name="yonetici" type="text" placeholder="Yönetici" readonly="${!isPo}" class="form-control input-sm" required="required"/> 
   </div>
 </div>
-
-<!-- <div class="form-group"> -->
-<!--   <label class="col-md-4 control-label" for="sel1">Select list:</label> -->
-<!--   <div class="col-md-4"> -->
-<!--   <select class="form-control input-sm" id="sel1"> -->
-<!--     <option>1</option> -->
-<!--     <option>2</option> -->
-<!--     <option>3</option> -->
-<!--     <option>4</option> -->
-<!--   </select> -->
-<!--   </div> -->
-<!-- </div> -->
 
 
 <div class="form-group">

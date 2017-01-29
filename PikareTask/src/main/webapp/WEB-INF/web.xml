@@ -71,7 +71,7 @@
   <error-page>
     <!-- Missing resource -->
     <error-code>404</error-code>
-    <location>/login</location>
+    <location>/404</location>
 </error-page>
   
   

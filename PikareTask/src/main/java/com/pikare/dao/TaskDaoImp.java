@@ -301,7 +301,7 @@ public class TaskDaoImp implements TaskDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Task> getByWeek(int hafta, int yil, String user,
-			String kategori,String anakategori,String status) {
+			String kategori,String anakategori,String status,String ilktarih,String sontarih) {
 		List<Task> task = new ArrayList<Task>();
 		Session session = null;
 		Transaction txn = null;
@@ -337,6 +337,11 @@ public class TaskDaoImp implements TaskDao {
 		    if(!anakategori.isEmpty())
 		    	query += " AND kategori IN (select kategori from Kategori where anaKategori = '"+anakategori+"') ";
 		    
+		    if(!ilktarih.isEmpty())
+		    	query += " AND assigmnetDate >= '" + ilktarih+ "' ";
+	    
+		    if(!sontarih.isEmpty())
+		    	query += " AND assigmnetDate <= '" + sontarih+ "' ";
 		  
 		    Query queryList = session.createQuery(query); //You will get Weayher object
 		    task = (List<Task>)queryList.list();
@@ -460,7 +465,7 @@ public class TaskDaoImp implements TaskDao {
 		    //String sql = "SELECT distinct Task.taskSahibi,  COALESCE(ct,0) FROM  Task LEFT JOIN(SELECT Task.taskSahibi, COUNT(*) as ct FROM Task where status='OPEN' ";      		
 		    //String groupBy = "GROUP BY Task.taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
 		    
-		    String sql = "select taskSahibi , count(*) from Task where status = 'OPEN' ";
+		    String sql = "select taskSahibi , count(*) from Task where assigmnetDate is not null ";
 		    String groupBy = " group by taskSahibi";
 		    
 		    if(!kisi.isEmpty())

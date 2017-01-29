@@ -17,7 +17,7 @@ public interface TaskDao{
 	public void removePerson(int id);
 	public List<FilterClass> getCountClose(String user, String kategori);
 	public List<String> getWeek();
-	public List<Task> getByWeek(int hafta,int yil , String user , String kategori,String anakategori,String status);
+	public List<Task> getByWeek(int hafta,int yil , String user , String kategori,String anakategori,String status , String ilktarik,String sontarih);
 	public List Filtrele(String kisi);
 	public List getAllOpenTask();
 	public List getOpenTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
