@@ -335,7 +335,7 @@ public class TaskDaoImp implements TaskDao {
 		    if(!user.isEmpty())
 		    	query += " AND taskSahibi = '"+user+"' ";
 		    if(!anakategori.isEmpty())
-		    	query += " AND kategori IN (select kategori from Kategori where anaKategori = '"+anakategori+"') ";
+		    	query += " AND (kategori IN (select kategori from Kategori where anaKategori = '"+anakategori+"') OR kategori = '"+anakategori+"' ) ";
 		    
 		    if(!ilktarih.isEmpty())
 		    	query += " AND assigmnetDate >= '" + ilktarih+ "' ";
@@ -427,7 +427,7 @@ public class TaskDaoImp implements TaskDao {
 	    		sql += " AND closeWeek <= '" + SonTarih+ "' ";
 		   
 		    if(!kategori.isEmpty())
-	    		sql += " AND closeWeek >= '" + ilkTarih+ "' ";
+	    		sql += " AND (kategori IN (select kategori from Kategori where anaKategori = '"+kategori+"') OR kategori = '"+kategori+"' ) ";
 	    
 		    sql += groupBy;
 		    
@@ -482,7 +482,7 @@ public class TaskDaoImp implements TaskDao {
 	    		sql += " AND assigmnetDate <= '" + SonTarih+ "' ";
 		   
 		    if(!kategori.isEmpty())
-	    		sql += " AND assigmnetDate >= '" + ilkTarih+ "' ";
+	    		sql += " AND (kategori IN (select kategori from Kategori where anaKategori = '"+kategori+"') OR kategori = '"+kategori+"' ) ";
 	    
 		    sql += groupBy;
 		    

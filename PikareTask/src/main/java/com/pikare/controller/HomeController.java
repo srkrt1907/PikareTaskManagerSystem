@@ -117,15 +117,29 @@ public class HomeController {
 	@RequestMapping(value = "/secure/taskEkle", method = RequestMethod.GET)
 	ModelAndView taskEkleGet()
 	{
+		if(pikareSession.getUsername().isEmpty())
+		{
+			setSession();
+		}
 		ModelAndView model = new ModelAndView("taskEkle");
 		model.addObject("task", new Task());
 
 		List<Users> users = userDao.getByUserRoles();
 		model.addObject("users", users);
 		
-		List<Kategori> kategori = kategoriDao.get();
-		model.addObject("kategori", kategori);
 		
+		if(pikareSession.getRole().equals("ROLE_PO"))
+		{
+		List<String> kategori = kategoriDao.getAnaKategori();
+		model.addObject("kategori", kategori);
+		model.addObject("type" , "ana");
+		}
+		else
+		{
+			List<Kategori> kategori = kategoriDao.get();
+			model.addObject("kategori", kategori);
+			model.addObject("type" , "");
+		}
 		List<String> efor = kategoriDao.getEforHarf();
 		model.addObject("eforList", efor);
 		
@@ -309,17 +323,27 @@ public class HomeController {
 		
 		ModelAndView model = new ModelAndView("taskEkle");
 		
+		Task task = taskDao.getTaskById(taskNo);
 		List<Users> users = userDao.getByUserRoles();
 		model.addObject("users", users); 
 		
-		
-		List<Kategori> kategori = kategoriDao.get();
+		if(pikareSession.getRole().equals("ROLE_PO") && task.getKategori() == null)
+		{
+		List<String> kategori = kategoriDao.getAnaKategori();
 		model.addObject("kategori", kategori);
+		model.addObject("type" , "ana");
+		}
+		else
+		{
+			List<Kategori> kategori = kategoriDao.get();
+			model.addObject("kategori", kategori);
+			model.addObject("type" , "");
+		}
 		
 		List<String> efor = kategoriDao.getEforHarf();
 		model.addObject("eforList", efor);
 		
-		Task task = taskDao.getTaskById(taskNo);
+		
 		if((pikareSession.getRole().equals("ROLE_USER") || pikareSession.getRole().equals("ROLE_ADMIN")) && task.getCloseWeek() == null )
 		{
 			task.setCloseWeek(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
@@ -494,6 +518,18 @@ public class HomeController {
 			List<String> anakategori = kategoriDao.getAnaKategori();
 			model2.addObject("anakategoriList", anakategori);
 			
+			return model2;
+		}
+		
+		@RequestMapping(value = "secure/m2m", method = RequestMethod.GET)
+		public ModelAndView m2m() {
+			
+			if(pikareSession.getUsername().isEmpty())
+			{
+				setSession();
+			}
+			
+			ModelAndView model2 = new ModelAndView("m2mPage");		
 			return model2;
 		}
 		

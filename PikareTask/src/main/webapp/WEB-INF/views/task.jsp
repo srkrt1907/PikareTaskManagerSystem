@@ -30,11 +30,14 @@
                                         <th>Task Adi</th>
                                         <th>Task Assigment</th>
                                         <th style="width: 5%">Aciliyet</th>
+                                        <th>Priority</th>
                                         <th>Kategori</th>
                                         <th style="width: 7%">İş Tanımı</th>
                                         <th style="width: 7%">Status</th>
                                         <th style="width: 7%">Açılış Tar.</th>
                                         <th style="width: 7%">Kapanış Tar.</th>
+                                        <th style="display: none">Talep Sahibi</th>
+                                        <th style="display: none">Yonetici</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,11 +47,14 @@
                                         <td>${task.taskName}</td>
                                         <td>${task.taskSahibi}</td>
                                         <td >${task.acil}</td>
+                                        <td>${task.priority}</td>
                                         <td >${task.kategori}</td>
                                         <td >${task.isTanimi}</td>
                                         <td >${task.status}</td>
                                         <td >${task.openWeek}</td>
-                                        <td >${task.closeWeek}</td>    
+                                        <td >${task.closeWeek}</td>
+                                        <td style="display: none" >${task.talepSahibi}</td>
+                                        <td style="display: none">${task.yonetici}</td>    
                                     </tr>     
    						
 								</c:forEach>
@@ -77,6 +83,7 @@ $(document).ready(function() {
     $('#dataTables-example').DataTable({
         responsive: true,
         dom: 'lBfrtip',
+        "order": [[ 0, "desc" ]],
         buttons: [
             'copyHtml5',
             'excelHtml5',

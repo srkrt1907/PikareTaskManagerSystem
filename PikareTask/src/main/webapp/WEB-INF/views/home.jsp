@@ -22,8 +22,8 @@
             <label for="type1" class="control-label">Listeleme Tipi</label>
             <select class="form-control" onchange="selectedChageType()" name="listtype" id="listtype">
              <option value="">--Select One--</option>
-              <option value="1">Task Listesi</option>
-              <option value="2">Sayılara Göre</option>
+              <option value="1">Task Listesine Göre</option>
+              <option value="2">Kişi Bazında Sayılara Göre</option>
             </select>
           </div>
         
@@ -75,17 +75,15 @@
             <div class="input-group">
               <div class="input-group-addon" id="basic-addon2"></div>
               <select class="form-control input-sm" id="status" name="status"> 
-							 	   <option value="" label="--Please Select"/>
+							 	    <option value="" label="--Please Select"/>
 									<option value="WAITING"  label="WAITING"/>
 									<option value="OPEN"  label="OPEN"/>
 									<option value="CLOSED"  label="CLOSED"/>						 
-			</select>
+			</select>			
             </div>
+            <br />
+            <p style="color: red">Status Seçilmediginde default olarak kapanan tasklar gelmektedir.</p>
           </div>
-          
-          					
-          
-         
           <p class="text-center">
           <input  type="button" value="Search" class="btn btn-danger glyphicon glyphicon-search" id="ara" />
           </p>

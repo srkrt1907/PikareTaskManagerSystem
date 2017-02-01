@@ -35,7 +35,21 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Task ID</label>  
   <div class="col-md-4">
-  <form:input path="taskNo" name="taskNo" type="text" placeholder="Task İd giriniz" readonly="${!isPo}"  class="form-control input-sm" required="required" /> 
+  
+  <c:choose>
+    <c:when test="${saveorupdate=='update'}">
+    <a href="https://projettt.turktelekom.com.tr/itg/web/knta/crt/RequestDetail.jsp?REQUEST_ID=${task.taskNo}">
+  		 <form:input path="taskNo" name="taskNo" type="text" placeholder="Task İd giriniz" readonly="${!isPo}"  class="form-control input-sm" required="required"/>
+    </a>
+    </c:when>    
+    <c:otherwise>
+		 <form:input path="taskNo" name="taskNo" type="text" placeholder="Task İd giriniz" readonly="${!isPo}"  class="form-control input-sm" required="required" />
+    </c:otherwise>
+	</c:choose>
+  
+  
+  
+  
   </div>
 </div>
 
@@ -152,9 +166,21 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Kategori</label>  
   <div class="col-md-4">
-  <form:select class="form-control input-sm"  disabled="${isPo }" itemValue="kategori" name="kategori2" id="kategori2" path="kategori"> 
+  <form:select class="form-control input-sm"  itemValue="kategori" name="kategori2" id="kategori2" path="kategori"> 
    <c:forEach items="${kategori }" var="kat">
-   		<form:option value="${kat.kategori}">${kat.kategori}</form:option>
+
+   
+   <c:choose>
+    <c:when test="${type == 'ana'}">
+   			 <form:option value="${kat}">${kat}</form:option>
+       		
+        <br />
+    </c:when>    
+    <c:otherwise>
+    	<form:option value="${kat.kategori}">${kat.kategori}</form:option>
+    </c:otherwise>
+   	</c:choose>
+   	
    	</c:forEach>
 </form:select>
 </div>

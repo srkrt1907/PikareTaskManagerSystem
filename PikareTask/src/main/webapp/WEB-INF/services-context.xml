@@ -13,7 +13,6 @@
 		<beans:import resource="Hibernate.xml"/>
 		
 		
-		
 		<beans:bean id="personDAO" class="com.pikare.dao.TaskDaoImp" >
 			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
 		</beans:bean>

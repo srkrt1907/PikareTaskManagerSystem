@@ -31,6 +31,17 @@ public class Task {
 	@Column(name = "taskNo",unique=true)
 	String taskNo;
 	
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", taskNo=" + taskNo + ", taskName="
+				+ taskName + ", taskSahibi=" + taskSahibi + ", isTanimi="
+				+ isTanimi + ", acil=" + acil + ", status=" + status
+				+ ", openWeek=" + openWeek + ", closeWeek=" + closeWeek
+				+ ", talepSahibi=" + talepSahibi + ", yonetici=" + yonetici
+				+ ", priority=" + priority + ", assigmnetDate=" + assigmnetDate
+				+ ", efor=" + efor + ", kategori=" + kategori + "]";
+	}
+
 	String taskName;
 	String taskSahibi;
 	String isTanimi;

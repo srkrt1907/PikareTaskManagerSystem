@@ -193,6 +193,98 @@ function selectedChageType()
 	}
 
 
+$("#uploadAndFile").click(function()
+{
+	var fd = new FormData();
+	var dt = $("#fileICCID");
+	var dtt = dt[0].files;
+	
+	if(dtt[0] == null)
+		{
+			sweetAlert("Hata", "Bu işlemi yapmak için lütfen dosya seçiniz", "error");
+			return false;
+		}
+	
+	var ext = dtt[0].name.split('.').pop();
+	if(ext != "xlsx" && ext != "xls")
+		{
+		sweetAlert("Hata", "Bu işlemi yapmak için lütfen excel dosyasi seçiniz", "error");
+		return false;
+		}
+		
+	
+	fd.append( "file", dtt[0]);
+	
+	var token = $("#_csrf").val();
+	var header =$("#_csrf_header").val(); 
+	$body = $("body");
+	$body.addClass("loading");
+	if ( $.fn.DataTable.isDataTable('#tableSonuc') ) {
+		  $('#tableSonuc').DataTable().destroy();
+		  $('#tableSonuc').empty();
+		}
+	
+	 $.ajax({
+	                type: "POST",
+	                url: "../data/uploadFileAndFind",
+	                data: fd,
+	                contentType: false,
+	                processData: false,
+	                cache: false,
+	                beforeSend: function(xhr) {
+	                    // here it is
+	                    xhr.setRequestHeader(header, token);
+	                },
+	                /*beforeSend: function(xhr, settings) {
+	                    xhr.setRequestHeader("Content-Type", "multipart/form-data;boundary=gc0p4Jq0M2Yt08jU534c0p");
+	                    settings.data = {name: "file", file: inputElement.files[0]};                    
+	                },*/
+	                success: function (result) {                        
+	                    if ( result.length > 0 ) {
+	                    	
+	                    	var column_names = ['Başlangiç','Bitiş','Sonuc'];
+	        		        var columns = [];
+	        		        for (var i = 0; i < column_names.length; i++) {
+	        		            columns[i] = {
+	        		                'title': column_names[i]
+	        		                
+	        		            }
+	        		        };
+	        	          var dataSet=[];
+	        	          for (var int = 0; int < result.length; int++) {
+	        	           	  var bas = result[int].Bas;
+	        	                 var bit = result[int].Bit;
+	        	                 var sonuc = result[int].Sonuc;
+	        	                 var data2 = [bas,bit,sonuc];
+	        	                 dataSet.push(data2);
+	        	          }
+	        	                  	          
+	        	          $('#tableSonuc').DataTable({        
+	        	        	  columns: columns,
+	        	        	  data: dataSet,  
+	        	              dom: 'lBfrtip',
+	        	              buttons: [
+	        	                  'copyHtml5',
+	        	                  'excelHtml5',
+	        	                  'pdfHtml5'
+	        	              ]   
+	        	              
+	        	          });      
+	        	          $body.removeClass("loading");
+	        	          sweetAlert("Sonuc", "Sonuc Tabloya Eklendi", "success");
+	        	          
+	                    } else {
+	                    	sweetAlert("Sonuc", "Başlangiç ve Bitiş Bulunamadi", "error");
+	                    	 $body.removeClass("loading"); 
+	                    }
+	                },
+	                error: function (result) {
+	                    console.log(result.responseText);
+	                }
+	 });
+	
+});
+
 
 $("#ara").click(function()
 {
@@ -242,7 +334,7 @@ $("#ara").click(function()
 	          
 //	          var tableHeaders = "<th></th><th>Alınan</th><th>Kapanan</th><th>Tümü</th>";        
 	          
-		    	var column_names = ['Kişiler','Alınan','Kapanan','Tümü'];
+		    	var column_names = ['Kişiler','Alınan','Kapanan','Üzerindeki Açık Tasklar'];
 		        var columns = [];
 		        for (var i = 0; i < column_names.length; i++) {
 		            columns[i] = {
@@ -302,7 +394,7 @@ $("#ara").click(function()
 //                                  +"<th>Talep Yöneticisi</th>";        
           
           
-          var column_names = ['Task No','Task Adi','Task Assigment','Aciliyet','İş Tanımı','Kategori','Açılış Tar.','Başlama Tar.','Kapanış Tar.','Talep Sahibi','Talep Yöneticisi'];
+          var column_names = ['Task No','Task Adi','Task Assigment','Priority','Aciliyet','İş Tanımı','Status','Kategori','Açılış Tar.','Başlama Tar.','Kapanış Tar.','Talep Sahibi','Talep Yöneticisi'];
 	        var columns = [];
 	        for (var i = 0; i < column_names.length; i++) {
 	            columns[i] = {
@@ -313,7 +405,7 @@ $("#ara").click(function()
           
           var dataSet=[];
           for (var int = 0; int < data.length; int++) {
-                 var data2 = [data[int].taskNo,data[int].taskName,data[int].taskSahibi,data[int].acil,data[int].isTanimi,data[int].status,data[int].kategori,data[int].openWeek,data[int].assigmnetDate,data[int].closeWeek,data[int].talepSahibi,data[int].yonetici];
+                 var data2 = [data[int].taskNo,data[int].taskName,data[int].taskSahibi,data[int].priority,data[int].acil,data[int].isTanimi,data[int].status,data[int].kategori,data[int].openWeek,data[int].assigmnetDate,data[int].closeWeek,data[int].talepSahibi,data[int].yonetici];
                  dataSet.push(data2);
           }
           
@@ -324,6 +416,7 @@ $("#ara").click(function()
               data: dataSet,
               columns: columns,
               dom: 'lBfrtip',
+              "order": [[ 0, "desc" ]],
               buttons: [
                   'copyHtml5',
                   'excelHtml5',

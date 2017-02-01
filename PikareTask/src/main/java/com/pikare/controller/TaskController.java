@@ -1,5 +1,8 @@
 package com.pikare.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,14 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pikare.dao.TaskDao;
 import com.pikare.dao.UserDao;
 import com.pikare.model.FilterClass;
+import com.pikare.model.M2MModel;
 import com.pikare.model.Task;
 import com.pikare.model.Users;
 import com.pikare.session.GenericResponse;
+import com.pikare.session.M2MBean;
 
 @Controller
 @RequestMapping("/data")
@@ -146,6 +153,37 @@ public class TaskController {
 		List<Task> task = taskDao.getByWeek(hafta,yil,user,"",anakategori,status,firstdate,lastdate);
 
 		return task;
+	}
+	
+	
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	public 
+	ModelAndView uploadFileHandler(
+			@RequestParam("file") MultipartFile file , final RedirectAttributes redirectAttributes) {
+
+		M2MBean m2mBean = new M2MBean();
+		boolean response = m2mBean.upload(file, "");
+		if(response)
+			redirectAttributes.addFlashAttribute("msg", "Dosya Başarili şekilde yüklendi");
+		else
+			redirectAttributes.addFlashAttribute("msg", "Dosya yüklenirken hata olustu");
+		
+		ModelAndView model = new ModelAndView("redirect:../secure/m2m");
+		return model;
+	}
+	
+	@RequestMapping(value = "/uploadFileAndFind",headers = "content-type=multipart/*", method = RequestMethod.POST)
+	public @ResponseBody
+	List<M2MModel> uploadFile(@RequestParam("file") MultipartFile file) {
+		
+		List<M2MModel> response = new ArrayList<M2MModel>();
+		M2MBean m2mBean = new M2MBean();
+		List<M2MModel> m2m = m2mBean.Oku(file);
+		if(m2m != null)
+		{
+			response = m2mBean.find(m2m);
+		}
+		return response;
 	}
 
 	

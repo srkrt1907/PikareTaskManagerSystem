@@ -126,6 +126,17 @@
                             <a href="myTask"><i class="fa fa-edit fa-fw"></i> My Tasks</a>
                         </li>
                         </sec:authorize>
+                        <sec:authorize access="hasAnyRole('USER , ADMIN')">
+                        <li>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i>Pikare<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="m2m">M2M</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        </sec:authorize>
                         
                        
                     </ul>
