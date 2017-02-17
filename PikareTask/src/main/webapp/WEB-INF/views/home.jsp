@@ -11,7 +11,7 @@
 
 </head>
 <body>
-	<div class="row">
+	<div class="form-horizontal">
 <!-- 	col-md-6 col-md-offset-3 col-lg-offset-0 -->
 		<div class="col-lg-3">
       <div class="well">
@@ -85,7 +85,7 @@
             <p style="color: red">Status Seçilmediginde default olarak kapanan tasklar gelmektedir.</p>
           </div>
           <p class="text-center">
-          <input  type="button" value="Search" class="btn btn-danger glyphicon glyphicon-search" id="ara" />
+          <input  type="button" value="Search" class="btn btn-danger" id="ara" />
           </p>
         </form>
       </div>

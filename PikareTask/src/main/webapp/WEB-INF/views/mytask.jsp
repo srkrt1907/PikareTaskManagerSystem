@@ -8,9 +8,9 @@
 </head>
 <body>
 
-<div class="row">
+<div class="form-horizontal">
                 <div class="col-lg-12">
-                    <h1 class="page-header">My Task</h1>
+                    <h1>My Task</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

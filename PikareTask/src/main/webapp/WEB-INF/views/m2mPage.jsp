@@ -11,7 +11,7 @@
 	
 	<sec:authorize access="hasRole('ADMIN')">
 	
-	<div class="panel-body">
+	<div class="form-horizontal">
 	<div class="col-lg-6">
 	<div class="panel-heading">
            Yeni out dosyası yukle
@@ -28,7 +28,7 @@
    </div>
    </sec:authorize>
    
-   <div class="panel-body">
+   <div class="form-horizontal">
    <div class="col-lg-6">
 	<div class="panel-heading">
            ICCID excel yükle
@@ -46,7 +46,7 @@
     </div>                                 
    </div>
    
-   <div class="panel-body">
+   <div class="form-horizontal">
    <div class="col-lg-6"> 
    	<table class="table responsive table-striped table-bordered table-hover" id="tableSonuc"></table>
    	</div>

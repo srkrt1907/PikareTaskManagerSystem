@@ -9,9 +9,8 @@
 </head>
 <body>
 
-    <div class="row">
-    <fieldset class="for-panel">
-          
+    <div class="form-horizontal">
+     
             <c:choose>
 			    <c:when test="${saveorupdate=='update'}">
 			  		<legend>Kullanıcı Guncelle</legend>
@@ -85,8 +84,6 @@
 					 </form:form>
              	      	
               </div>
-
-        </fieldset>
     </div>
 
 </body>

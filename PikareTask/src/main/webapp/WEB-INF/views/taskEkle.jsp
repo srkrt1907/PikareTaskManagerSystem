@@ -13,7 +13,7 @@
 <body>
 <br>
 <form:form id="taskForm" class="form-horizontal" method="POST" action="taskEkle" onsubmit=" return validateForm();" acceptCharset="utf-8" modelAttribute="task">
-<fieldset>
+
 
 <sec:authorize access="hasRole('USER')" var="isUser" />
 <sec:authorize access="hasRole('ADMIN')" var="isAdmin" />
@@ -188,7 +188,7 @@
 
 
 <div class="form-group">								
-		<div class="col-md-16" >
+		<div class="col-md-8" >
 		
 	<c:choose>
     <c:when test="${saveorupdate=='update'}">
@@ -205,7 +205,7 @@
 		</div>
 	<br>
 <%-- 	<p style="color:red">${msg}</p> --%>
-</fieldset>
+
 </form:form>
 </body>
 <content tag="local_script">

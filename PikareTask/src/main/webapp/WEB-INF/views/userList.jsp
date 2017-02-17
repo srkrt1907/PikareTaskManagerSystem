@@ -9,8 +9,7 @@
 </head>
 <body>
 
-    <div class="row">
-    <fieldset class="for-panel">  		     
+    <div class="form-horizontal"> 		     
           <div class="row">
  
             	<legend>Kullanici Listesi</legend>
@@ -41,7 +40,6 @@
               </div>
             </div>
           
-        </fieldset>
     </div>
 
 </body>

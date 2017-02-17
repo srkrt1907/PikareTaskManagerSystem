@@ -9,8 +9,8 @@
 </head>
 <body>
 
-    <div class="row">
-    <fieldset class="for-panel">
+    <div class="form-horizontal">
+
     <br>
          <legend>Şifre Degiştir</legend> 
           
@@ -31,7 +31,9 @@
     </div>
     
     <div class="form-group" >
+    <div class="col-xs-5">
     	<button type="submit"  class="btn btn-primary center-block">Kaydet</button>
+    </div>
     </div>
     
     <span id="error" style="color: red" ></span>
@@ -39,7 +41,6 @@
 </form>
 
 
-        </fieldset>
     </div>
 
 </body>

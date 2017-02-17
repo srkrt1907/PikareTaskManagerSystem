@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -42,6 +45,7 @@ import com.pikare.dao.EforDao;
 import com.pikare.dao.KategoriDao;
 import com.pikare.dao.TaskDao;
 import com.pikare.dao.UserDao;
+import com.pikare.dao.YonetWifiDaoImp;
 import com.pikare.dao.login.LoginDao;
 import com.pikare.dao.login.LoginDaoImpl;
 import com.pikare.model.Efor;
@@ -49,6 +53,7 @@ import com.pikare.model.Kategori;
 import com.pikare.model.Task;
 import com.pikare.model.UserRole;
 import com.pikare.model.Users;
+import com.pikare.model.YonetWifi;
 import com.pikare.session.PikareSession;
 
 @Controller
@@ -75,6 +80,9 @@ public class HomeController {
 	@Autowired
 	EforDao eforDao;
 	
+	@Autowired
+	YonetWifiDaoImp wifi;
+	
 	private static final Logger logger = Logger.getLogger(HomeController.class); 
 	
 	
@@ -89,7 +97,14 @@ public class HomeController {
 	ModelAndView giris()
 	{
 		logger.info(" project started");
-		return new ModelAndView("/login/login");
+		return new ModelAndView("login/login");
+	}
+	
+	@RequestMapping(value = "secure/anasayfa2", method = RequestMethod.GET)
+	ModelAndView giris2()
+	{
+		logger.info(" project started");
+		return new ModelAndView("anasayfa2");
 	}
 	
 //	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -97,11 +112,11 @@ public class HomeController {
 //	{
 //		return new ModelAndView("/login/login");
 //	}
-	@RequestMapping(value = "login", method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login2(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout) {
 		
-		ModelAndView model = new ModelAndView("/login/login");
+		ModelAndView model = new ModelAndView("login/login");
 		if (error != null) {
 			model.addObject("error", "Kullanıc Adı yada şifre hatalı!");
 		}
@@ -532,6 +547,43 @@ public class HomeController {
 			ModelAndView model2 = new ModelAndView("m2mPage");		
 			return model2;
 		}
+		
+		@RequestMapping(value = "secure/yonetwifi", method = RequestMethod.GET)
+		public ModelAndView yonetwifiGet() {
+			ModelAndView model = new ModelAndView("yonetWifi"); 
+			List<YonetWifi> wifiList = wifi.getAll();
+			model.addObject("wifiList", wifiList);
+			model.addObject("yonetwifi",new YonetWifi());
+			return model;
+		}
+		
+		@RequestMapping(value = "secure/yonetwifi", method = RequestMethod.POST)
+		public ModelAndView yonetwifiSaveorUpdate(@ModelAttribute(value="yonetwifi") YonetWifi yonetWifi) {
+			ModelAndView model = new ModelAndView("yonetWifi"); 
+			
+			boolean dgr = false;
+			if(yonetWifi.getId() > 0)
+			{
+				dgr = wifi.update(yonetWifi);
+			}
+			else
+				dgr = wifi.save(yonetWifi);
+			
+			
+			if(dgr)
+			{
+				model.addObject("msg", "işleminiz başarılı bir sekilde gercekleşti");
+			}
+			else
+				model.addObject("msg", "işleminiz gerçekleşirken hata meydana geldi");
+				
+			
+			List<YonetWifi> wifiList = wifi.getAll();
+			model.addObject("wifiList", wifiList);
+			model.addObject("yonetwifi", new YonetWifi());
+			return model;
+		}
+		
 		
 		void setSession()
 		{

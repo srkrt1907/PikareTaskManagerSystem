@@ -8,9 +8,9 @@
 </head>
 <body>
 
-<div class="row">
+<div class="form-horizontal">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Tüm Tasklar</h1>
+                    <h1>Tüm Tasklar</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -28,14 +28,14 @@
                                     <tr>
                                         <th style="width: 5%">Task No</th>
                                         <th>Task Adi</th>
-                                        <th>Task Assigment</th>
+                                        <th style="width: 5%">Task Assigment</th>
                                         <th style="width: 5%">Aciliyet</th>
-                                        <th>Priority</th>
+                                        <th style="width: 5%">Priority</th>
                                         <th>Kategori</th>
-                                        <th style="width: 7%">İş Tanımı</th>
-                                        <th style="width: 7%">Status</th>
-                                        <th style="width: 7%">Açılış Tar.</th>
-                                        <th style="width: 7%">Kapanış Tar.</th>
+                                        <th style="width: 5%">İş Tanımı</th>
+                                        <th style="width: 5%">Status</th>
+                                        <th style="width: 10%">Açılış Tar.</th>
+                                        <th style="width: 10%">Kapanış Tar.</th>
                                         <th style="display: none">Talep Sahibi</th>
                                         <th style="display: none">Yonetici</th>
                                     </tr>

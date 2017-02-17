@@ -35,6 +35,12 @@
 			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
 		</beans:bean>
 		
+		<beans:bean id="wifi" class="com.pikare.dao.YonetWifiDaoImp" >
+			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+		</beans:bean>
+		
+		
+		
 		<beans:bean id="pikareSession" class="com.pikare.session.PikareSession" scope="session"/>
 		
 		</beans:beans>

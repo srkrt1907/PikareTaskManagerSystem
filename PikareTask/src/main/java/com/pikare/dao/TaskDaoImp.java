@@ -3,8 +3,10 @@ package com.pikare.dao;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.bind.ParseConversionEvent;
 
@@ -275,10 +277,15 @@ public class TaskDaoImp implements TaskDao {
 		    for(int i = 0 ; i< result.size() ; i++)
 		    {
 		    	Object[] o = (Object[])result.get(i);
-		    	//int tarih = (int)o[0];
-		    	//int hafta = (int)o[1];
 		    	int tarih= Integer.parseInt(o[0].toString());
 		    	int hafta= Integer.parseInt(o[1].toString());
+		    	
+		    	Calendar c = Calendar.getInstance();
+		    	c.set(Calendar.WEEK_OF_YEAR, hafta);        
+		    	c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		        System.out.println(c.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("tr") ) );
+		        String month = c.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("tr"));
+		    	
 		    	
 		    	week.add(Integer.toString(tarih) + "-" + Integer.toString(hafta));
 		    }

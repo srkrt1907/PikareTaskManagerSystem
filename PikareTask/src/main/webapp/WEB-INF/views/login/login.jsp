@@ -3,6 +3,7 @@
 <html>
 
 <head>
+<title>Pikare Task Manager Login</title>
 <meta name="decorator" content="no" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-9">
 <script
@@ -17,7 +18,7 @@
 <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<link href="resources/assets/css/login.css" rel='stylesheet' type='text/css'>
+<link href="resources/admin/css/login.css" rel='stylesheet' type='text/css'>
 </head>
 <!-- Where all the magic happens -->
 <!-- LOGIN FORM -->

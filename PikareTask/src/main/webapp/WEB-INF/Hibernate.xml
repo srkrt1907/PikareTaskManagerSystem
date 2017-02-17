@@ -27,6 +27,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		<value>com.pikare.model.UserRole</value>
 		<value>com.pikare.model.Kategori</value>
 		<value>com.pikare.model.Efor</value>
+		<value>com.pikare.model.YonetWifi</value>
 		
 	</list>
     </property>

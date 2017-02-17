@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +23,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pikare.dao.TaskDao;
 import com.pikare.dao.UserDao;
+import com.pikare.dao.YonetWifiDaoImp;
 import com.pikare.model.FilterClass;
 import com.pikare.model.M2MModel;
 import com.pikare.model.Task;
 import com.pikare.model.Users;
+import com.pikare.model.YonetWifi;
 import com.pikare.session.GenericResponse;
 import com.pikare.session.M2MBean;
 
@@ -35,6 +41,9 @@ public class TaskController {
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	YonetWifiDaoImp wifi;
 	
 	
 	@SuppressWarnings("rawtypes")
@@ -184,6 +193,78 @@ public class TaskController {
 			response = m2mBean.find(m2m);
 		}
 		return response;
+	}
+	
+	@RequestMapping(value = "/wifiDelete")
+	public @ResponseBody
+	String yonetWifiDelet(@RequestParam("id") int id) {
+		
+		YonetWifi yonett = wifi.getByID(id);
+		boolean dgr = wifi.delete(yonett);
+		return "" +dgr;
+	}
+	
+	@RequestMapping(value = "/wifiAll" ,  produces = "application/json")
+	public @ResponseBody
+	List<YonetWifi> wifiAll() {	
+		List<YonetWifi> yonett = wifi.getAll();
+		return yonett;
+	}
+	
+	
+	@SuppressWarnings("unused")
+	@RequestMapping(value = "/datatables")
+	public @ResponseBody
+	String Datatables(HttpServletRequest request , HttpServletResponse response ) {
+		
+		String name = request.getQueryString();
+		name = name.replace("%22", " ");
+		JSONObject jsonObject = new JSONObject(name);
+        String action = jsonObject.get("action").toString();
+        String data = jsonObject.get("data").toString();
+        
+        JSONObject json12 = new JSONObject(data);
+        
+        YonetWifi _wifi = new YonetWifi();
+        
+        Iterator keys = json12.keys();
+        while(keys.hasNext()) {
+            // loop to get the dynamic key
+            String currentDynamicKey = (String)keys.next();
+
+            // get the value of the dynamic key
+            JSONObject currentDynamicValue = json12.getJSONObject(currentDynamicKey);
+            
+            String id = currentDynamicValue.get("id").toString();
+            String portalname = currentDynamicValue.get("name").toString();
+            String sunucu1 = currentDynamicValue.get("sunucu1").toString();
+            String sunucu2 = currentDynamicValue.get("sunucu2").toString();
+            String webServis = currentDynamicValue.get("webServis").toString();
+            
+            int _id = Integer.parseInt(id);
+            _wifi.setId(_id);
+            _wifi.setName(portalname);
+            _wifi.setSunucu1(sunucu1);
+            _wifi.setSunucu2(sunucu2);
+            _wifi.setWebServis(webServis);
+            break;
+            // do something here with the value...
+        }
+        
+        if(action.equals("create"))
+        {
+        	wifi.save(_wifi);
+        }
+        else if(action.equals("edit"))
+        {
+        	wifi.update(_wifi);
+        }
+        else if(action.equals("remove"))
+        {
+        	wifi.delete(_wifi);
+        }
+        
+		return name;
 	}
 
 	

@@ -10,7 +10,7 @@
            http://www.springframework.org/schema/security/spring-security-4.0.xsd
            http://www.springframework.org/schema/context 
            http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-
+	
     <http auto-config="true" use-expressions="true">
 		<intercept-url pattern="/secure/**" access="isAuthenticated()" />
 		<intercept-url pattern="/data/**" access="isAuthenticated()" />
@@ -21,9 +21,11 @@
 			username-parameter="username" password-parameter="password" />
 		<logout logout-success-url="/login?logout" />
 		<!-- enable csrf protection -->
-		<csrf />
+		<csrf disabled="true" />
 	</http>
-
+	
+	
+<!-- 	<security:http pattern="/resources/**" security="none" /> -->
 	<authentication-manager>
 		<authentication-provider user-service-ref="loginService" />
 	</authentication-manager>
