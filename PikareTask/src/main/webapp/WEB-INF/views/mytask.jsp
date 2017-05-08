@@ -60,6 +60,50 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+                           Pending Task
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" >
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example3">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%">Task No</th>
+                                        <th>Task Adi</th>
+                                        <th style="width: 10%">İş Tanımı</th>
+                                        <th style="width: 10%">Status</th>
+                                        <th style="width: 10%">Açılış Tar.</th>
+                                        <th style="width: 10%">Kapanış Tar.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                 <c:forEach items="${pendingTask}" var="task">
+                                 <tr class="odd gradeX" >
+                                        <td><a href="taskupdate?taskid=${task.taskNo}">${task.taskNo}</a></td>
+                                        <td>${task.taskName}</td>
+                                        <td >${task.isTanimi}</td>
+                                        <td >${task.status}</td>
+                                        <td >${task.openWeek}</td>
+                                        <td >${task.closeWeek}</td>                                  
+                                    </tr>     
+   						
+								</c:forEach>
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
                             Closed Task
                         </div>
                         <!-- /.panel-heading -->
@@ -113,7 +157,19 @@ $(document).ready(function() {
             'copyHtml5',
             'excelHtml5',
             'pdfHtml5'
-        ]
+        ],
+        "pageLength": 10,
+	  	"language": {
+		    "search": "Filtre:",
+		    	"paginate": {
+		            "first":      "İlk",
+		            "last":       "Son",
+		            "next":       "Sonraki",
+		            "previous":   "Önceki"
+		        },
+		        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+		        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+		  }
     });
     $('#dataTables-example2').DataTable({
         responsive: true,
@@ -123,7 +179,42 @@ $(document).ready(function() {
             'copyHtml5',
             'excelHtml5',
             'pdfHtml5'
-        ]
+        ],
+        "pageLength": 10,
+	  	"language": {
+		    "search": "Filtre:",
+		    	"paginate": {
+		            "first":      "İlk",
+		            "last":       "Son",
+		            "next":       "Sonraki",
+		            "previous":   "Önceki"
+		        },
+		        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+		        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+		  }
+    });
+    
+    $('#dataTables-example3').DataTable({
+        responsive: true,
+        dom: 'lBfrtip',
+        "order": [[ 0, "desc" ]],
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'pdfHtml5'
+        ],
+        "pageLength": 10,
+	  	"language": {
+		    "search": "Filtre:",
+		    	"paginate": {
+		            "first":      "İlk",
+		            "last":       "Son",
+		            "next":       "Sonraki",
+		            "previous":   "Önceki"
+		        },
+		        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+		        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+		  }
     });
 
    

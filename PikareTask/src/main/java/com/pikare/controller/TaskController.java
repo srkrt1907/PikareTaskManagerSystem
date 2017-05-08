@@ -1,8 +1,5 @@
 package com.pikare.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pikare.dao.KategoriDao;
 import com.pikare.dao.TaskDao;
+import com.pikare.dao.TaskInfoDao;
 import com.pikare.dao.UserDao;
 import com.pikare.dao.YonetWifiDaoImp;
-import com.pikare.model.FilterClass;
 import com.pikare.model.M2MModel;
 import com.pikare.model.Task;
+import com.pikare.model.TaskInfo;
 import com.pikare.model.Users;
 import com.pikare.model.YonetWifi;
 import com.pikare.session.GenericResponse;
@@ -44,6 +43,13 @@ public class TaskController {
 	
 	@Autowired
 	YonetWifiDaoImp wifi;
+	
+	@Autowired
+	KategoriDao kategoriDao;
+	
+	@Autowired
+	TaskInfoDao taskInfoDao;
+	
 	
 	
 	@SuppressWarnings("rawtypes")
@@ -68,9 +74,16 @@ public class TaskController {
 		
 		
 		List allTask =  taskDao.getAllOpenTask();
-		List closeTask = taskDao.getClosedTask(kisi, hafta,yil, firsdate, lastdate, kategori);
-		List assignWeek = taskDao.getOpenTask(kisi, hafta,yil,  firsdate, lastdate, kategori);		
-		List<Users> users = userDao.getByUserRoles();	
+		
+		ArrayList<String> closedTask = taskDao.getClosedTaskJDBC(kisi, hafta, yil, firsdate, lastdate, kategori);
+		
+		//List closeTask = taskDao.getClosedTask(kisi, hafta,yil, firsdate, lastdate, kategori);
+		List assignWeek = taskDao.getOpenTask(kisi, hafta,yil,  firsdate, lastdate, kategori);	
+		List pendingTask = taskDao.getPendingTask(kisi, hafta,yil,  firsdate, lastdate, kategori);	
+		List<Users> users = userDao.getByUserRoles();
+		
+		List<String> efor = kategoriDao.getEforHarf();
+
 		List<GenericResponse> responseList = new ArrayList<GenericResponse>();
 		
 		
@@ -100,20 +113,45 @@ public class TaskController {
 			else
 				bulundu = false;
 			
-			for(int i = 0 ; i< closeTask.size() ; i++)
+//			for(int i = 0 ; i< closeTask.size() ; i++)
+//			{
+//				Object[] obj = (Object[])closeTask.get(i);
+//				String name = (String)obj[0];
+//				
+//				if(name.equals(user.getName()))
+//				{
+//					bulundu = true;
+//					Long sayi = (Long)obj[1];
+//					response.setClose(sayi.toString());
+//				}			
+//			}
+//			if(!bulundu)
+//				response.setClose(new String("0"));
+//			else
+//				bulundu = false;
+//			
+//			
+			for(int i = 0 ; i< closedTask.size() ; i++)
 			{
-				Object[] obj = (Object[])closeTask.get(i);
-				String name = (String)obj[0];
 				
+				String name = closedTask.get(i);
+								
 				if(name.equals(user.getName()))
 				{
 					bulundu = true;
-					Long sayi = (Long)obj[1];
+					String sayi = closedTask.get(i + 1);
+					String getEfor = closedTask.get(i+ 2);
 					response.setClose(sayi.toString());
-				}			
+					response.setEfor(getEfor);
+				}
+				i++;
+				i++;
 			}
 			if(!bulundu)
+			{
 				response.setClose(new String("0"));
+				response.setEfor("0");
+			}
 			else
 				bulundu = false;
 			
@@ -134,6 +172,22 @@ public class TaskController {
 			else
 				bulundu = false;
 			
+			for(int i = 0 ; i< pendingTask.size() ; i++)
+			{
+				Object[] obj = (Object[])pendingTask.get(i);
+				String name = (String)obj[0];
+				
+				if(name.equals(user.getName()))
+				{
+					bulundu = true;
+					Long sayi = (Long)obj[1];
+					response.setPending(sayi.toString());
+				}			
+			}
+			if(!bulundu)
+				response.setPending(new String("0"));
+			else
+				bulundu = false;
 			
 			responseList.add(response);
 			
@@ -266,7 +320,99 @@ public class TaskController {
         
 		return name;
 	}
+	@RequestMapping(value = "updateTaskInfo", method = RequestMethod.GET)
+	@ResponseBody	String updateTaskInfo(@RequestParam(value = "id") String id ,
+			@RequestParam(value = "taskInfo") String infoName,
+			@RequestParam(value = "taskId") String infoId , 
+			@RequestParam(value = "taskNo") String taskNo  
+			) {
+			
+		TaskInfo taskInfo = new TaskInfo();
+		int _id = Integer.parseInt(id);
+		taskInfo.setId(_id);
+		taskInfo.setInfoId(infoId);
+		taskInfo.setInfoName(infoName);
+		taskInfo.setTaskNo(taskNo);
+		
+		if(taskInfoDao.update(taskInfo))
+			return "1";
+		else
+			return "0";
+		
+	}
+	@RequestMapping(value = "deleteTaskInfo", method = RequestMethod.GET)
+	@ResponseBody	String deleteTaskInfo(@RequestParam(value = "id") String id ,
+			@RequestParam(value = "taskInfo") String infoName,
+			@RequestParam(value = "taskId") String infoId , 
+			@RequestParam(value = "taskNo") String taskNo  
+			) {
+			
+		TaskInfo taskInfo = new TaskInfo();
+		int _id = Integer.parseInt(id);
+		taskInfo.setId(_id);
+		taskInfo.setInfoId(infoId);
+		taskInfo.setInfoName(infoName);
+		taskInfo.setTaskNo(taskNo);
+		
+		if(taskInfoDao.delete(taskInfo))
+			return "1";
+		else
+			return "0";
+		
+	}
+	
+	@RequestMapping(value = "updateYonetWifi", method = RequestMethod.GET)
+	@ResponseBody	String updateYonetWifi(@RequestParam(value = "id") String id ,
+			@RequestParam(value = "name") String name,
+			@RequestParam(value = "sunucu1") String sunucu1 , 
+			@RequestParam(value = "sunucu2") String sunucu2,
+			@RequestParam(value = "webServis") String webServis,
+			@RequestParam(value = "user") String user,
+			@RequestParam(value = "type") String type
+			) {
+			
+		YonetWifi yonetWifi = new YonetWifi();
+		int _id = Integer.parseInt(id);
+		yonetWifi.setId(_id);
+		yonetWifi.setName(name);
+		yonetWifi.setSunucu1(sunucu1);
+		yonetWifi.setSunucu2(sunucu2);
+		yonetWifi.setWebServis(webServis);
 
+		
+		if(wifi.update(yonetWifi))
+			return "1";
+		else
+			return "0";
+		
+	}
+	
+	@RequestMapping(value = "deleteYonetWifi", method = RequestMethod.GET)
+	@ResponseBody	String deleteYonetWifi(@RequestParam(value = "id") String id ,
+			@RequestParam(value = "name") String name,
+			@RequestParam(value = "sunucu1") String sunucu1 , 
+			@RequestParam(value = "sunucu2") String sunucu2,
+			@RequestParam(value = "webServis") String webServis,
+			@RequestParam(value = "user") String user,
+			@RequestParam(value = "type") String type
+			
+			) {
+			
+		YonetWifi yonetWifi = new YonetWifi();
+		int _id = Integer.parseInt(id);
+		yonetWifi.setId(_id);
+		yonetWifi.setName(name);
+		yonetWifi.setSunucu1(sunucu1);
+		yonetWifi.setSunucu2(sunucu2);
+		yonetWifi.setWebServis(webServis);
+		
+		if(wifi.delete(yonetWifi))
+			return "1";
+		else
+			return "0";
+		
+	}
+	
 	
 	
 

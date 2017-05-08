@@ -57,5 +57,21 @@ public class YonetWifi implements Serializable {
 	}
 	String webServis;
 	
+	String user;
+	String type;//Post or Soap
+
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 
 }

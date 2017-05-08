@@ -1,5 +1,6 @@
 package com.pikare.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import com.pikare.model.Task;
 
 public interface TaskDao{
 	
-	public void addTask(Task task);
+	public boolean addTask(Task task);
 	public void updateTask(Task task);
 	public List<Task> listTasks();
 	public Task getTaskById(String id);
@@ -22,4 +23,7 @@ public interface TaskDao{
 	public List getAllOpenTask();
 	public List getOpenTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
 	public List getClosedTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
+	public List getPendingTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori);
+	public int getMaxPriority();
+	ArrayList<String> getClosedTaskJDBC(String kisi, int hafta, int yil, String ilkTarih, String SonTarih, String kategori); 
 }

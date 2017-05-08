@@ -8,8 +8,33 @@ public class GenericResponse {
 	String open;
 	String close;
 	String name;
+	String pending;
+	String acikEfor;
+	String kapalEfor;
+	
+
+	String efor;
 	
 	
+	public String getAcikEfor() {
+		return acikEfor;
+	}
+	public String getEfor() {
+		return efor;
+	}
+	public void setEfor(String efor) {
+		this.efor = efor;
+	}
+	public void setAcikEfor(String acikEfor) {
+		this.acikEfor = acikEfor;
+	}
+	public String getKapalEfor() {
+		return kapalEfor;
+	}
+	public void setKapalEfor(String kapalEfor) {
+		this.kapalEfor = kapalEfor;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -21,6 +46,12 @@ public class GenericResponse {
 	}
 	public void setAll(String all) {
 		this.all = all;
+	}
+	public String getPending() {
+		return pending;
+	}
+	public void setPending(String pending) {
+		this.pending = pending;
 	}
 	public String getOpen() {
 		return open;
@@ -34,26 +65,6 @@ public class GenericResponse {
 	public void setClose(String close) {
 		this.close = close;
 	}
-	List closeTask;
-	List openTask;
-	List assignTask;
-	public List getCloseTask() {
-		return closeTask;
-	}
-	public void setCloseTask(List closeTask) {
-		this.closeTask = closeTask;
-	}
-	public List getOpenTask() {
-		return openTask;
-	}
-	public void setOpenTask(List openTask) {
-		this.openTask = openTask;
-	}
-	public List getAssignTask() {
-		return assignTask;
-	}
-	public void setAssignTask(List assignTask) {
-		this.assignTask = assignTask;
-	}
+	
 
 }

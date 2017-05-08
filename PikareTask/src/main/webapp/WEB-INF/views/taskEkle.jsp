@@ -111,6 +111,7 @@
   <form:select class="form-control input-sm" path="status" id="status" itemValue="status" >
    <form:option value="WAITING" >WAITING</form:option> 
    <form:option value="OPEN">OPEN</form:option>
+   <form:option value="PENDING">PENDING</form:option>
    <form:option value="CLOSED">CLOSED</form:option>
   </form:select>
   </div>
@@ -183,12 +184,20 @@
    	
    	</c:forEach>
 </form:select>
+<br>
+ 	<sec:authorize access="hasRole('USER')">
+  	<button type="button" onclick="info_open(${task.taskNo})" style="float: left" class="btn">Info Ekle</button>
+  </sec:authorize>
 </div>
 </div>
 
 
 <div class="form-group">								
 		<div class="col-md-8" >
+		
+		
+		
+		
 		
 	<c:choose>
     <c:when test="${saveorupdate=='update'}">
@@ -211,12 +220,44 @@
 <content tag="local_script">
 <script>
 $(document).ready(function() {
-<c:if test="${not empty msg}">
-var	paramOne ="<c:out value='${msg}'/>";
-swal("Sonuç!", paramOne );
-</c:if>
-
-
+	
+	var saveorupdate = "<c:out value='${saveorupdate}'/>";
+	
+	if(saveorupdate != 'update')
+		{
+		<c:if test="${not empty msg }">
+		var	paramOne ="<c:out value='${msg}'/>";		
+		swal({
+				  title: "Başarıl bir şekilde kayıt edildi.",
+				  type: "info",
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  confirmButtonText: "Tamam",
+				  cancelButtonText: "Kopyala",
+				},
+				function(isConfirm){
+				  if (!isConfirm) {
+					  window.location.assign("../secure/kopyala?id=copy")
+				  }
+				  else
+					  {
+					  	return; 
+					  }
+				});
+		</c:if>	
+		}
+	else
+		{
+			<c:if test="${not empty msg}">
+			var	paramOne ="<c:out value='${msg}'/>";
+			swal("Sonuç!", paramOne , "info" );
+			</c:if>
+		}
+	
+	<c:if test="${not empty error}">
+		var	paramOne ="<c:out value='${error}'/>";
+		swal("Sonuç!", paramOne , "error" );
+	</c:if>
 
 });
 

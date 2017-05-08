@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="dec"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
+<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -31,7 +31,7 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" type="text/css">
-		<link href="../resources/admin/datatables/css/editor.dataTables.min.css" rel="stylesheet" type="text/css"/>
+
 	<link href="../resources/admin/css/loading.css" rel="stylesheet" type="text/css"/>
 	<link href="../resources/admin/datatables/css/select.dataTables.min.css" rel="stylesheet" type="text/css"/>
 	
@@ -126,7 +126,41 @@
               </div>
 
               <ul class="nav navbar-nav navbar-right">
-                <li class="">
+              
+              <sec:authorize access="hasAnyRole('USER , ADMIN')">
+              <li>
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green" id="sayi">${sayi }</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    
+                   <c:forEach items="${notify}" var="notif">
+                   <li id="notify">
+                   		<span class="message">
+                         	<a href="./taskupdate?taskid=${notif.taskNO}&okundu=okundu" style="font-weight: bolder;  ">${notif.taskNO}</a>
+                         	 Nolu ${notif.taskName}  ${notif.message}
+                        </span>
+                      <c:if test="${sayi > 0 }">
+                      <li id="notify1">
+                      <div class="text-center">
+                        <a>
+                          <strong onclick="okundusay()">Hepsini Okundu Say</strong>
+                          <i class="fa fa-angle-right" ></i>
+                        </a>
+                      </div>
+                    </li>
+                      </c:if>  
+                     
+                   </li>
+                   </c:forEach>
+                   
+                  </ul>
+                </li>
+              </sec:authorize>
+              
+              
+                <li class="" style="float: right;">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                    <img src="../resources/admin/img/user.png" alt="" >
 					<sec:authentication property="principal.username" />
@@ -168,6 +202,11 @@
         <!-- /footer content -->
       </div>
     </div>
+    
+    <script type="text/javascript">
+   	 //document.getElementById("menu1").style.display = "none";
+    
+    </script>
 	
 	<script type="text/javascript" src="../resources/admin/js/jquery.min.js"></script>
     <!-- jQuery --><script type="text/javascript" src="../resources/admin/js/bootstrap.min.js"></script>
@@ -195,7 +234,6 @@
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.min.js"></script>
    	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     
-	<script type="text/javascript" src="../resources/admin/datatables/js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" src="../resources/admin/datatables/js/dataTables.select.min.js"></script>
 	
 	<dec:getProperty property="page.local_script"></dec:getProperty>

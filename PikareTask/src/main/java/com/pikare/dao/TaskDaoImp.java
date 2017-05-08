@@ -1,7 +1,12 @@
 package com.pikare.dao;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -16,6 +21,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pikare.model.FilterClass;
 import com.pikare.model.Task;
 import com.pikare.model.Users;
+import com.pikare.session.ReadProperty;
 
 public class TaskDaoImp implements TaskDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private ReadProperty readProperty;
 	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
@@ -40,7 +50,7 @@ public class TaskDaoImp implements TaskDao {
 	
 	
 	@Override
-	public void addTask(Task task) {
+	public boolean addTask(Task task) {
 		Session session = null;
 		Transaction txn = null;
 		try {  
@@ -52,6 +62,7 @@ public class TaskDaoImp implements TaskDao {
 
 		} catch (Exception e) { 
 		    System.out.println(e.getMessage());
+		    return false;
 		} finally {
 		    if (!txn.wasCommitted()) {
 		        txn.rollback();
@@ -60,7 +71,7 @@ public class TaskDaoImp implements TaskDao {
 		    session.flush();  
 		    session.close();   
 		}
-		
+		return true;
 
 	}
 
@@ -350,6 +361,9 @@ public class TaskDaoImp implements TaskDao {
 		    if(!sontarih.isEmpty())
 		    	query += " AND assigmnetDate <= '" + sontarih+ "' ";
 		  
+		    
+		    
+		    System.out.println(query);
 		    Query queryList = session.createQuery(query); //You will get Weayher object
 		    task = (List<Task>)queryList.list();
 		    
@@ -417,6 +431,7 @@ public class TaskDaoImp implements TaskDao {
 		  //  String groupBy = " GROUP BY taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
 		    
 		    
+//		    String sql = "select taskSahibi , count(*) , SUM(temp.efor_deger) from Task  inner join (select DISTINCT efor_harf , efor_deger from Kategori) as temp on temp.efor_harf = isTanimi where status = 'CLOSED' ";
 		    String sql = "select taskSahibi , count(*) from Task where status = 'CLOSED' ";
 		    String groupBy = " group by taskSahibi";
 		    
@@ -438,6 +453,8 @@ public class TaskDaoImp implements TaskDao {
 	    
 		    sql += groupBy;
 		    
+		    System.out.println("sonuc :"+ sql);
+		    
 		    Query query = session.createQuery(sql); //You will get Weayher object
 		    list = query.list();
 		    query.list().size();
@@ -455,6 +472,108 @@ public class TaskDaoImp implements TaskDao {
 		    session.flush();  
 		    session.close();   
 		}
+		return list;
+		
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<String> getClosedTaskJDBC(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori) {
+			
+		if(readProperty == null || readProperty.getDbUser().equals(""))
+		{
+			System.out.println("Buraya girdim...");
+			ReadProperty prop = null;
+			try {
+				prop = new ReadProperty();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return null;
+			}
+			readProperty = prop;
+		}
+		
+		
+		String JDBC_DRIVER = readProperty.getDbdriver(); 
+		String DB_URL = readProperty.getDbUrl();
+
+		   //  Database credentials
+		String USER = readProperty.getDbUser();
+	    String PASS = readProperty.getDbPass();
+		 
+		Connection conn = null;
+		Statement stmt = null;
+		 
+		
+			
+		ArrayList<String> list = new ArrayList<String>();
+		try {  
+    
+		  //  String sql = "SELECT distinct Task.taskSahibi , ct FROM  Task LEFT OUTER JOIN ( SELECT taskSahibi, COUNT(*) as ct FROM Task where status='CLOSED' ";      		
+		  //  String groupBy = " GROUP BY taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
+		    
+		    
+//		    String sql = "select taskSahibi , count(*) , SUM(temp.efor_deger) from Task  inner join (select DISTINCT efor_harf , efor_deger from Kategori) as temp on temp.efor_harf = isTanimi where status = 'CLOSED' ";
+		    String sql = "select taskSahibi , count(*) , sum(temp.efor_deger) from Task inner join (select  distinct efor_harf , efor_deger from kategoriefor) as temp on isTanimi = temp.efor_harf  where status = 'CLOSED' ";
+		    String groupBy = " group by taskSahibi";
+		    
+		    if(!kisi.isEmpty())
+		    	sql += " AND taskSahibi = '" + kisi+ "' ";
+		    if(hafta > 0)
+		    	sql += " AND WEEKOFYEAR(closeWeek) = " + hafta + " ";
+		    if(yil > 0) 
+		    	sql += " AND YEAR(closeWeek) = '" +yil+"' ";
+		    	
+		    if(!ilkTarih.isEmpty())
+		    		sql += " AND closeWeek >= '" + ilkTarih+ "' ";
+		    
+		    if(!SonTarih.isEmpty())
+	    		sql += " AND closeWeek <= '" + SonTarih+ "' ";
+		   
+		    if(!kategori.isEmpty())
+	    		sql += " AND (kategori IN (select kategori from kategoriefor where ana_Kategori = '"+kategori+"') OR kategori = '"+kategori+"' ) ";
+	    
+		    sql += groupBy;
+		    
+		    System.out.println("sonuc :"+ sql);
+		    
+		    Class.forName(JDBC_DRIVER);
+
+		    //STEP 3: Open a connection
+		    System.out.println("Connecting to database...");
+		    conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+		      //STEP 4: Execute a query
+		    System.out.println("Creating statement...");
+		    stmt = conn.createStatement();
+		    
+		    stmt = conn.createStatement();
+		    System.out.println("sql  = " +sql);
+		    ResultSet rs = stmt.executeQuery(sql);
+		    
+		    while(rs.next()){
+		         //Retrieve by column name		         
+		         String taskSahibi = rs.getString(1);
+		         String count = rs.getString(2);
+		         String efor = rs.getString(3);
+		         
+		         list.add(taskSahibi);
+		         list.add(count);
+		         list.add(efor);
+
+		      }
+		    
+		    rs.close();
+		    stmt.close();
+		    conn.close();
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		   
+		}
+		
 		return list;
 		
 	}
@@ -514,6 +633,66 @@ public class TaskDaoImp implements TaskDao {
 		return list;
 		
 	}
+	
+	
+	@Override
+	public List getPendingTask(String kisi , int hafta, int yil, String ilkTarih , String SonTarih , String kategori) {//ALDİGİ TASKLAR
+		
+		List list = null;
+		Session session = null;
+		Transaction txn = null;
+		try {  
+		    session = sessionFactory.openSession();  
+		    txn = session.beginTransaction();
+		    
+		    //String sql = "SELECT distinct Task.taskSahibi,  COALESCE(ct,0) FROM  Task LEFT JOIN(SELECT Task.taskSahibi, COUNT(*) as ct FROM Task where status='OPEN' ";      		
+		    //String groupBy = "GROUP BY Task.taskSahibi ) as CountQuery ON Task.taskSahibi = CountQuery.taskSahibi order by Task.taskSahibi ";
+		    
+		    String sql = "select taskSahibi , count(*) from Task where status = 'PENDING' ";
+		    String groupBy = " group by taskSahibi";
+		    
+		    if(!kisi.isEmpty())
+		    	sql += " AND taskSahibi = '" + kisi+ "' ";
+		    if(hafta > 0)
+		    	sql += " AND WEEKOFYEAR(assigmnetDate) = " + hafta + " ";
+		    if(yil > 0) 
+		    	sql += " AND YEAR(assigmnetDate) = '" +yil+"' ";
+		    	
+		    if(!ilkTarih.isEmpty())
+		    		sql += " AND assigmnetDate >= '" + ilkTarih+ "' ";
+		    
+		    if(!SonTarih.isEmpty())
+	    		sql += " AND assigmnetDate <= '" + SonTarih+ "' ";
+		   
+		    if(!kategori.isEmpty())
+	    		sql += " AND (kategori IN (select kategori from Kategori where anaKategori = '"+kategori+"') OR kategori = '"+kategori+"' ) ";
+	    
+		    sql += groupBy;
+		    
+		    Query query = session.createQuery(sql); //You will get Weayher object
+		    
+		    list = query.list();
+		    query.list().size();
+		    txn.commit();
+		    System.out.println("başarili bir şekilde eklendi");
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		    return null;
+		} finally {
+		    if (!txn.wasCommitted()) {
+		        txn.rollback();
+		    }
+
+		    session.flush();  
+		    session.close();   
+		}
+		return list;
+		
+	}
+	
+	
+	
 	@Override
 public List getAllOpenTask() {//ALDİGİ TASKLAR
 	
@@ -551,6 +730,30 @@ public List getAllOpenTask() {//ALDİGİ TASKLAR
 	return list;
 	
 }
+
+	@Override
+	public int getMaxPriority() {
+		Session session = null;
+		int maxPro = 0;
+		try {  
+		    session = sessionFactory.openSession();
+		    
+		    Criteria criteria = session
+		    	    .createCriteria(Task.class)
+		    	    .setProjection(Projections.max("priority"));
+		    	String max = (String)criteria.uniqueResult();
+		    	maxPro = Integer.parseInt(max); 
+		    	
+		    System.out.println("başarili bir Şekilde eklendi");
+
+		} catch (Exception e) { 
+		    System.out.println(e.getMessage());
+		}
+		 
+		session.flush();  
+		session.close();
+		return maxPro;
+	}
 	
 
 }

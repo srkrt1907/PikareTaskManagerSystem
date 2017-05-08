@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
-    <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -10,7 +10,7 @@
 <title>Insert title here</title>
 
 </head>
-<body>
+<body >
 	<div class="form-horizontal">
 <!-- 	col-md-6 col-md-offset-3 col-lg-offset-0 -->
 		<div class="col-lg-3">
@@ -78,7 +78,9 @@
 							 	    <option value="" label="--Please Select"/>
 									<option value="WAITING"  label="WAITING"/>
 									<option value="OPEN"  label="OPEN"/>
-									<option value="CLOSED"  label="CLOSED"/>						 
+									<option value="PENDING"  label="PENDING"/>
+									<option value="CLOSED"  label="CLOSED"/>
+													 
 			</select>			
             </div>
             <br />

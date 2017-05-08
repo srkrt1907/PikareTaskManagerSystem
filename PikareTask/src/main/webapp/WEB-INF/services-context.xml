@@ -38,9 +38,17 @@
 		<beans:bean id="wifi" class="com.pikare.dao.YonetWifiDaoImp" >
 			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
 		</beans:bean>
+		<beans:bean id="taskInfoDao" class="com.pikare.dao.TaskInfoDaoImp" >
+			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+		</beans:bean>
+		
+		<beans:bean id="notifyDao" class="com.pikare.dao.NotifyDaoImp" >
+			<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+		</beans:bean>
 		
 		
 		
 		<beans:bean id="pikareSession" class="com.pikare.session.PikareSession" scope="session"/>
+		<beans:bean id="readProperty" class="com.pikare.session.ReadProperty" scope="session"/>
 		
 		</beans:beans>

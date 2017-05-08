@@ -19,7 +19,7 @@
                             <h1>Yonet Wifi List</h1>
 <!--                         /.panel-heading -->
                         <div class="panel-body">
-                            <table width="100%" class="table table-striped table-bordered" id="dataTables-example">
+                            <table width="100%" class="table table-striped table-bordered" id="wifiTable">
                                 <thead>
                                     <tr>
                                         <th >id</th>
@@ -27,16 +27,26 @@
                                         <th >Sunucu 1</th>
                                         <th >Sunucu 2</th>
                                         <th >Web Servis</th> 
+                                        <th>User</th>
+                                        <th>Type</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach items="${wifiList}" var="wifiLis"> 
-                                 <tr class="odd gradeX" id="<c:out value='${wifiLis.id}'></c:out>" >                                         
+                                		
+                                		<tr class="odd gradeX" id="<c:out value='${wifiLis.id}'></c:out>" >                                         
                                         <td >${wifiLis.id}</td>
-                                        <td>${wifiLis.name}</td>
-                                        <td >${wifiLis.sunucu1}</td>
-                                        <td>${wifiLis.sunucu2}</td>
-                                        <td >${wifiLis.webServis}</td>
+                                        <td contenteditable='true'>${wifiLis.name}</td>
+                                        <td contenteditable='true'>${wifiLis.sunucu1}</td>
+                                        <td contenteditable='true'>${wifiLis.sunucu2}</td>
+                                        <td contenteditable='true'>${wifiLis.webServis}</td>
+                                        <td contenteditable='true'>${wifiLis.user}</td>
+                                        <td contenteditable='true'>${wifiLis.type}</td>
+                                        <td><button id="edit-btn" onclick="editWifiTable(this)" class="btn" style="padding-top: 0px;padding-bottom: 0px">Edit</button></td>
+    									<td><button id="edit-btn" onclick="deleteWifiTable(this)" class="btn btn-info" style="padding-top: 0px;padding-bottom: 0px">Delete</button></td>
+    									  
                                     </tr>     
    							
 									</c:forEach>                            
@@ -81,7 +91,15 @@
 										<br />
 										
 										<label>Web Servis</label>
-										<form:input type="text" path="webServis" required="required"></form:input>
+										<form:input type="text" path="webServis"></form:input>
+										<br />
+										
+										<label>User</label>
+										<form:input type="text" path="user"></form:input>
+										<br />
+										
+										<label>Type</label>
+										<form:input type="text" path="type"></form:input>
 										<br />
 
 										<div class="action_btns">		
@@ -107,40 +125,35 @@
 <content tag="local_script">
 <script>
 $(document).ready(function() {
-	var editor; // use a global for the submit and return data rendering in the examples
-	 
-// 	    editor = new $.fn.dataTable.Editor( {
-	    	
-// 	        table: '#dataTables-example',
-// 	        fields: [ 
-// 	     	         {
-// 	                label: "id:",
-// 	                name: "id" ,
-// 	                type :"hidden",
-// 	     	        "default": "0"
-	                
-// 	            },{
-// 	                label: "Name:",
-// 	                name: "name",
-// 	            }, {
-// 	                label: "Sunucu 1:",
-// 	                name: "sunucu1",
-// 	            }, {
-// 	                label: "Sunucu 2:",
-// 	                name: "sunucu2",
-// 	            }, {
-// 	                label: "Web Servis:",
-// 	                name: "webServis",
-// 	            }
-// 	        ]
-// 	    } );
+
 
 	<c:if test="${not empty msg}">
 	var	paramOne ="<c:out value='${msg}'/>";
 	swal("Sonuç!", paramOne );
 	</c:if>
 	 
-	    $('#dataTables-example').DataTable();
+	  $('#wifiTable').DataTable({
+	        responsive: true,
+	        dom: 'lBfrtip',
+	        "order": [[ 0, "desc" ]],
+	        buttons: [
+	            'copyHtml5',
+	            'excelHtml5',
+	            'pdfHtml5'
+	        ],
+	        "pageLength": 10,
+		  	"language": {
+			    "search": "Filtre:",
+			    	"paginate": {
+			            "first":      "İlk",
+			            "last":       "Son",
+			            "next":       "Sonraki",
+			            "previous":   "Önceki"
+			        },
+			        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+			        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+			  }
+	    });
 
 
 	    

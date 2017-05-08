@@ -6,6 +6,33 @@ function child_open()
 popupWindow =window.open('display',"_blank","directories=no, status=no, menubar=no, scrollbars=yes, resizable=no,width=600, height=350,top=200,left=200");
 return false;
 }
+function info_open(taskNo)
+{ 
+popupWindow =window.open('taskInfo?id='+taskNo+'',"_blank","directories=no, status=no, menubar=no, scrollbars=yes, resizable=no,width=900, height=500,top=200,left=200");
+return false;
+}
+
+function force_logout() {
+	$.ajax({
+		url: "../secure/logout",
+	      type: 'GET'
+	});
+}
+
+function okundusay() {
+	$.ajax({
+		url: "../secure/okundu",
+	      type: 'GET',
+	      success: function(response) {	    	  
+	    	  $("#notify").html('');
+	    	  $("#notify1").html('');
+	    	  $("#sayi").html('0');
+	    	  
+	      }
+	});
+	
+}
+
 function deneme()
 {
 	var strUser = "";
@@ -231,14 +258,14 @@ $("#uploadAndFile").click(function()
 	                contentType: false,
 	                processData: false,
 	                cache: false,
-	                beforeSend: function(xhr) {
-	                    // here it is
-	                    xhr.setRequestHeader(header, token);
-	                },
-	                /*beforeSend: function(xhr, settings) {
-	                    xhr.setRequestHeader("Content-Type", "multipart/form-data;boundary=gc0p4Jq0M2Yt08jU534c0p");
-	                    settings.data = {name: "file", file: inputElement.files[0]};                    
-	                },*/
+//	                beforeSend: function(xhr) {
+//	                    // here it is
+//	                    xhr.setRequestHeader(header, token);
+//	                },
+//	                /*beforeSend: function(xhr, settings) {
+//	                    xhr.setRequestHeader("Content-Type", "multipart/form-data;boundary=gc0p4Jq0M2Yt08jU534c0p");
+//	                    settings.data = {name: "file", file: inputElement.files[0]};                    
+//	                },*/
 	                success: function (result) {                        
 	                    if ( result.length > 0 ) {
 	                    	
@@ -284,6 +311,126 @@ $("#uploadAndFile").click(function()
 	 });
 	
 });
+
+function editTable(taskNo,id,edit)
+{
+	var table = document.getElementById("taskInfotable");
+	var row = table.rows[edit.parentNode.parentNode.rowIndex];
+	var info = row.cells[0].innerHTML;
+	var infoid = row.cells[1].innerHTML;
+	 
+	$.ajax({
+    	url: "../data/updateTaskInfo",
+    	data: "id=" + id +"&taskInfo=" + info +"&taskId=" + infoid +"&taskNo=" + taskNo ,
+    	type: "GET",
+    	success: function(response) {
+    		if(response == '1')
+    			sweetAlert("Başarılı", "İşlem Başarılı şekilde gercekleşti.", "info");
+    		else
+    			sweetAlert("Hata", "İşlem yapılırken hata gerçekleşti.", "error");
+    }});
+	
+	
+}
+function deleteTable(taskNo,id,edit)
+{
+	swal({
+		  title: "Emin misin?",
+		  text: "Listeden Silinecek, Yapmak Istediginizden emin misin!",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: "#DD6B55",
+		  confirmButtonText: "Evet, Sil!"
+		},
+		function(){
+				var table = document.getElementById("taskInfotable");
+				var row = table.rows[edit.parentNode.parentNode.rowIndex];
+				var info = row.cells[0].innerHTML;
+				var infoid = row.cells[1].innerHTML;
+				 
+				$.ajax({
+			    	url: "../data/deleteTaskInfo",
+			    	data: "id=" + id +"&taskInfo=" + info +"&taskId=" + infoid +"&taskNo=" + taskNo ,
+			    	type: "GET",
+			    	success: function(response) {
+			    		if(response == '1')
+			    			{
+			    				sweetAlert("Başarılı", "İşlem Başarılı şekilde gercekleşti.", "info");
+			    				row.remove();
+			    			}
+			    		else
+			    			sweetAlert("Hata", "İşlem yapılırken hata gerçekleşti.", "error");
+			    }});
+		});
+	
+}
+function editWifiTable(edit)
+{
+	var table = document.getElementById("wifiTable");
+	var row = table.rows[edit.parentNode.parentNode.rowIndex];
+	var id = row.cells[0].innerHTML;
+	var name = row.cells[1].innerHTML;
+	var sunucu1 = row.cells[2].innerHTML;
+	var sunucu2 = row.cells[3].innerHTML;
+	var webServis = row.cells[4].innerHTML;
+	var user = row.cells[5].innerHTML;
+	var type = row.cells[6].innerHTML;
+	 
+	$.ajax({
+    	url: "../data/updateYonetWifi",
+    	data: "id=" + id +"&name=" + name +"&sunucu1=" + sunucu1 +"&sunucu2=" + sunucu2 +"&webServis=" + webServis +"&user="+ user + "&type="+type ,
+    	type: "GET",
+    	success: function(response) {
+    		if(response == '1')
+    			sweetAlert("Başarılı", "İşlem Başarılı şekilde gercekleşti.", "info");
+    		else
+    			sweetAlert("Hata", "İşlem yapılırken hata gerçekleşti.", "error");
+    }});
+	
+	
+}
+function deleteWifiTable(edit)
+{
+	swal({
+		  title: "Emin misin?",
+		  text: "Listeden Silinecek, Yapmak Istediginizden emin misin!",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: "#DD6B55",
+		  confirmButtonText: "Evet, Sil!"
+		},
+		function(){
+			var table = document.getElementById("wifiTable");
+			var row = table.rows[edit.parentNode.parentNode.rowIndex];
+			var id = row.cells[0].innerHTML;
+			var name = row.cells[1].innerHTML;
+			var sunucu1 = row.cells[2].innerHTML;
+			var sunucu2 = row.cells[3].innerHTML;
+			var webServis = row.cells[4].innerHTML;
+			var user = row.cells[5].innerHTML;
+			var type = row.cells[6].innerHTML;
+			 
+			$.ajax({
+		    	url: "../data/deleteYonetWifi",
+		    	data: "id=" + id +"&name=" + name +"&sunucu1=" + sunucu1 +"&sunucu2=" + sunucu2 +"&webServis=" + webServis  +"&user="+ user + "&type="+type,
+		    	type: "GET",
+		    	success: function(response) {
+		    		if(response == '1')
+		    		{
+		    			sweetAlert("Başarılı", "İşlem Başarılı şekilde gercekleşti.", "info");
+		    			row.remove();
+		    		}
+		    		else
+		    			sweetAlert("Hata", "İşlem yapılırken hata gerçekleşti.", "error");
+		    }});
+		  
+		});
+	
+	
+	
+	
+	
+}
 
 
 $("#ara").click(function()
@@ -336,7 +483,7 @@ $("#ara").click(function()
 	          
 		    		
 
-		    	var column_names = ['Kişiler','Alınan','Kapanan','Üzerindeki Açık Tasklar'];
+		    	var column_names = ['Kişiler','Alınan','Kapanan','Pending','Üzerindeki Açık Tasklar(Not pending)' , 'Efor'];
 		        var columns = [];
 		        for (var i = 0; i < column_names.length; i++) {
 		            columns[i] = {
@@ -350,7 +497,9 @@ $("#ara").click(function()
 	                 var openTask = data[int].all;
 	                 var assignTask = data[int].open;
 	                 var name = data[int].name;
-	                 var data2 = [name,assignTask,closeTask,openTask];
+	                 var pending = data[int].pending;
+	                 var efor = data[int].efor;
+	                 var data2 = [name,assignTask,closeTask,pending,openTask,efor];
 	                 dataSet.push(data2);
 	          }
 	          
@@ -366,7 +515,19 @@ $("#ara").click(function()
 	                  'copyHtml5',
 	                  'excelHtml5',
 	                  'pdfHtml5'
-	              ]   
+	              ],
+	              "pageLength": 10,
+	      	  	"language": {
+	      		    "search": "Filtre:",
+	      		    	"paginate": {
+	      		            "first":      "İlk",
+	      		            "last":       "Son",
+	      		            "next":       "Sonraki",
+	      		            "previous":   "Önceki"
+	      		        },
+	      		        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+	      		        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+	      		  }
 	              
 	          });      
 	          $body.removeClass("loading"); 
@@ -441,7 +602,7 @@ $("#ara").click(function()
         	  			bas = array[0] +"/" +monthNames[date.getMonth()]+"-W"+weekNum;
         	  		}
 
-        	  	if(data[int].closeWeek != '' || data[int].closeWeek == null)
+        	  	if(data[int].closeWeek != '' && data[int].closeWeek != null)
         	  		{
         	  			var array2 = data[int].closeWeek.split("-");
         	  			var date2 = new Date(array2[0], (array2[1] - 1), array2[2])
@@ -467,6 +628,18 @@ $("#ara").click(function()
                   'excelHtml5',
                   'pdfHtml5'
               ],
+              "pageLength": 10,
+      	  	"language": {
+      		    "search": "Filtre:",
+      		    	"paginate": {
+      		            "first":      "İlk",
+      		            "last":       "Son",
+      		            "next":       "Sonraki",
+      		            "previous":   "Önceki"
+      		        },
+      		        "lengthMenu":     "_MENU_ adet kayıt görüntüle",
+      		        "info":           "_TOTAL_ kayıttan  _START_ - _END_ arası gösteriliyor",
+      		  },
               columnDefs: [
                            {
                                targets:0,
@@ -485,7 +658,7 @@ $("#ara").click(function()
                         	   targets:14,
                         	   className: 'never'
                            }
-                       ]  
+                       ] 
               
           }); 
           $body.removeClass("loading"); 
